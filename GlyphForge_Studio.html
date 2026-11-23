@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0b0b"><title>GlyphForge 0.3 — Nothing Phone (4a) Pro</title><style>
+:root{font-family:Inter,Roboto,"Helvetica Neue",Arial,sans-serif;font-size:14px;color:#f3f3f3;background:#0b0b0b;color-scheme:dark;--line:#303030;--soft:#171717;--accent:#f45b40;--muted:#999;--text:#f3f3f3}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.shell{max-width:1600px;margin:auto;min-height:100vh}.header{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;gap:16px}.brand{display:flex;align-items:center;gap:12px}.brand-icon{width:42px;height:42px;background:#f45b40;display:grid;place-items:center;color:#111;font-size:29px;border-radius:11px}.brand b{font-size:21px;letter-spacing:-.7px}.brand b span{color:var(--accent)}.brand small{display:block;margin-top:2px;color:#888;font-size:9px;letter-spacing:1.6px;font-weight:800}.device{display:flex;align-items:center;gap:9px;color:#aaa;font-size:12px}.online{height:7px;width:7px;border-radius:50%;background:#818181}.online.connected{background:#79da9f;box-shadow:0 0 0 4px #24382c}.layout{display:grid;grid-template-columns:205px minmax(0,1fr);min-height:calc(100vh - 117px)}.sidebar{display:flex;flex-direction:column;gap:5px;padding:27px 12px;border-right:1px solid var(--line)}.nav{display:flex;align-items:center;gap:13px;border:1px solid transparent;border-radius:8px;color:#a9a9a9;background:transparent;padding:14px 17px;text-align:left;font-size:13px;font-weight:750}.nav span{font-size:19px;width:21px;text-align:center}.nav:hover{background:#202020;color:#fff}.nav.active{background:#281d1b;border-color:#753b31;color:#ff886d}.nav-foot{margin-top:auto;color:#737373;font-size:11px;line-height:2;padding:15px}.main{padding:31px clamp(15px,3.5vw,50px) 65px;min-width:0}.page{display:none}.page.current{display:block}.eyebrow{color:#f27056;letter-spacing:2px;font-size:10px;font-weight:800;margin-bottom:12px}h1{font-size:clamp(31px,3.3vw,46px);margin:0;letter-spacing:-2px;line-height:1.12;font-weight:800}h1 em{font-style:normal;color:var(--accent)}h2{letter-spacing:-.5px}.page-title{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}.page-title p{color:var(--muted);font-size:13px;max-width:620px;line-height:1.6;margin:12px 0 0}.page-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.primary,.outline,.ghost{border-radius:7px;padding:11px 14px;font-weight:750;font-size:12px;border:1px solid transparent;background:transparent;color:white;white-space:nowrap}.primary{background:var(--accent);color:#1e1110}.primary:hover{background:#ff846d}.outline{border-color:#3b3b3b}.outline:hover{border-color:#aaa;background:#222}.ghost{border-color:transparent;color:#a0a0a0}.mini{padding:5px 10px;font-size:15px}.small{padding:9px 11px}.danger{color:#ee8888}.studio-layout{display:grid;grid-template-columns:minmax(290px,1.2fr) minmax(270px,.8fr);gap:17px}.panel{background:#151515;border:1px solid #292929;border-radius:11px;overflow:hidden}.panel.padded{padding:21px;margin-bottom:18px}.panel-head{padding:18px 19px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:1px}.padded>.panel-head{padding:0 0 16px;margin-bottom:17px}.tag{font-size:10px;background:#292929;color:#999;padding:7px 9px;border-radius:5px;font-weight:800;letter-spacing:.5px}.matrix-area{background:radial-gradient(circle at 50% 50%,#1a1a1a,#0e0e0e 65%);display:grid;place-items:center;min-height:420px;padding:27px}#grid{width:min(100%,435px);height:auto;aspect-ratio:1;touch-action:none;cursor:crosshair}.matrix-foot{display:flex;justify-content:space-between;padding:13px 19px;font-size:10px;font-weight:750;letter-spacing:1px;color:#a0a0a0;border-top:1px solid var(--line)}.matrix-foot b{color:#fff}.player{padding:13px 19px;display:flex;gap:8px;flex-wrap:wrap}.hint{color:#8d8d8d;font-size:11px;line-height:1.55}.matrix-panel>.hint{padding:0 19px 12px}.tools-panel{padding-bottom:15px}.tools-panel>.field-label,.tools-panel>input,.tools-panel>.tool-row,.tools-panel>.line,.tools-panel>.timeline{margin-left:19px;margin-right:19px}.field-label{display:flex;justify-content:space-between;color:#a5a5a5;font-size:10px;font-weight:800;letter-spacing:1px;margin-top:18px;margin-bottom:9px}input:not([type=range]):not([type=file]):not([type=checkbox]),select{min-width:0;max-width:100%;width:100%;background:#212121;border:1px solid #383838;color:#eee;padding:10px 11px;border-radius:6px;outline:0}input:focus,select:focus{border-color:var(--accent)!important}input[type=range]{width:calc(100% - 38px);accent-color:var(--accent)}input[type=checkbox]{accent-color:var(--accent)}.tool-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.tool{border:1px solid #3b3b3b;border-radius:7px;padding:10px 3px;background:#222;color:#ddd;font-size:23px}.tool small{display:block;font-size:9px;margin-top:4px}.tool.active{border-color:#ec674d;background:#39231f;color:#ff927c}.line{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.line input[type=number]{max-width:110px}.unit{color:#a8a8a8}.tools-panel hr,.panel hr{border:0;border-top:1px solid var(--line);margin:20px 0}.tools-panel hr{margin:20px 19px}.timeline{display:flex;gap:7px;overflow-x:auto;padding:4px 0 11px}.frame-tile{border:1px solid #3c3c3c;background:#222;padding:5px;border-radius:6px;min-width:64px;text-align:center;color:#ccc}.frame-tile.active{border-color:var(--accent);background:#382521}.frame-tile canvas{width:50px;height:50px;display:block;margin:auto}.frame-tile small{font-size:10px;display:block}.tools-panel>.line{margin-top:12px}.drop{border:2px dashed #414141;background:#1c1c1c;text-align:center;padding:34px 15px;border-radius:11px;display:flex;align-items:center;flex-direction:column;gap:10px}.drop.drag{border-color:var(--accent);background:#2b211e}.drop-symbol{display:grid;place-items:center;width:58px;height:58px;font-size:32px;background:#2a2a2a;border-radius:13px;color:#f2806a}.drop strong{font-size:17px}.drop p,.community p{font-size:12px;color:#aaa;line-height:1.7}.import-options,.form-grid,.ring-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:19px 0}.import-options small{display:block;margin-top:5px;color:#8a8a8a;font-size:10px}.import-options input[type=range]{width:100%}.switch{display:block;padding:5px 0;font-size:12px;color:#ddd}.import-result{padding:12px 13px;border:1px solid #363636;border-radius:7px;font-size:12px;color:#a9a9a9}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}.design-card{padding:12px;background:#202020;border:1px solid #353535;border-radius:8px}.design-card canvas{display:block;width:100%;max-height:124px;aspect-ratio:1;object-fit:contain;background:#151515;border-radius:6px}.design-card strong{font-size:12px;display:block;margin:10px 0 5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.design-card small{color:#999}.card-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.card-actions button{font-size:10px;padding:7px 8px}.empty{text-align:center;border:1px dashed #494949;color:#888;border-radius:9px;padding:25px}.community{margin-top:18px}.form-grid label{color:#aaa;font-size:10px;font-weight:800;letter-spacing:.8px;line-height:2.6}.form-grid input,.form-grid select{font-size:12px;font-weight:500;letter-spacing:0;line-height:1.2}.form-grid label input,.form-grid label select{display:block}.stack{display:grid;gap:10px}.rule-item,.scene-item,.step-item{display:flex;gap:15px;align-items:center;justify-content:space-between;border:1px solid #373737;background:#1f1f1f;border-radius:8px;padding:13px}.rule-item strong,.scene-item strong{font-size:13px}.rule-item small,.scene-item small{display:block;margin-top:6px;color:#909090;font-size:11px}.rule-item .line,.scene-item .line{justify-content:flex-end}.pill{color:#f49a86;border:1px solid #744339;background:#35221e;border-radius:20px;padding:6px 9px;font-size:10px;white-space:nowrap}.scene-head{padding:15px 0;border-bottom:0}.step-item{flex-wrap:wrap}.step-item select{flex:1;min-width:155px}.step-item input{max-width:94px!important}.step-item .close{color:#ff8a8a;background:transparent;border:0;font-size:22px}.ring-grid{gap:25px}input[type=file]{font-size:12px;width:100%;color:#bbb}audio{display:block;margin-top:20px;width:100%;max-width:480px}audio::-webkit-media-controls-panel{background:#ddd}.notice{font-size:12px;color:#bbb;line-height:1.75}.bottom{height:39px;padding:11px 30px;border-top:1px solid var(--line);font-size:10px;color:#666;letter-spacing:1px;display:flex;justify-content:space-between}#toast{color:#f28b75;font-size:12px;letter-spacing:0}dialog{max-width:440px;width:calc(100% - 30px);border:1px solid #555;border-radius:12px;color:#ddd;background:#1b1b1b;padding:25px;line-height:1.6}dialog::backdrop{background:#000b}@media(max-width:1100px){.studio-layout{grid-template-columns:1fr}.matrix-area{min-height:340px}.tools-panel>.field-label{margin-top:14px}}@media(max-width:720px){.header{height:68px;padding:0 13px}.brand b{font-size:17px}.brand-icon{height:38px;width:38px}.brand small{font-size:8px}.device{font-size:0;gap:5px}.device .mini{font-size:14px}.layout{display:block}.sidebar{position:fixed;bottom:0;left:0;right:0;z-index:10;background:#101010;border:1px solid #383838;display:grid;grid-template-columns:repeat(6,1fr);padding:5px 3px max(7px,env(safe-area-inset-bottom));gap:0}.nav{padding:7px 2px 3px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;border:none;border-radius:7px}.nav span{font-size:19px}.nav-foot{display:none}.main{padding:26px 12px 110px}.page-title{align-items:flex-start;flex-direction:column;margin-bottom:20px}.page-title p{margin-top:8px}.page-actions{justify-content:flex-start}.matrix-area{min-height:250px;padding:14px}#grid{width:min(100%,360px)}.panel.padded{padding:16px}.import-options,.form-grid,.ring-grid{grid-template-columns:1fr;gap:6px}.rule-item,.scene-item{flex-wrap:wrap}.bottom{display:none}}@media(max-width:380px){.nav{font-size:8px}.nav span{font-size:16px}.player button{flex:1}.tools-panel>.line{gap:4px}.tools-panel>.line .small{font-size:10px}} 
+
+.day-grid{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0}.day-grid label{background:#242424;border:1px solid #454545;border-radius:7px;padding:9px 10px;color:#ddd;font-size:12px;white-space:nowrap}.day-grid input{margin-right:6px}.credit{display:block;font-size:11px;margin-top:7px;color:#ff9d86}.days{margin:8px 0 18px}.rule-item{align-items:flex-start}.rule-item>div:first-child{min-width:0;overflow-wrap:anywhere}
+/* Music Reactive · catalog, editor and low-latency preview */
+.music-editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,380px);gap:16px;align-items:start}
+.music-filters{margin-bottom:18px}.music-filters input{flex:2;min-width:160px}.music-filters select{flex:1;min-width:120px}
+.music-preview-panel canvas{display:block;aspect-ratio:1;width:min(100%,320px);height:auto;margin:14px auto;background:radial-gradient(circle,#181818,#090909);border-radius:50%}
+.music-preview-panel audio{margin:12px 0}.music-meter{height:7px;border-radius:9px;background:#333;overflow:hidden;margin:10px 0 16px}
+#music-meter-fill{background:linear-gradient(90deg,#9c4438,#ff896f);height:100%;width:0;transition:width 80ms}
+.music-tile .music-cover{width:100%;max-height:100px;display:grid;place-items:center;background:radial-gradient(circle at 50%,#35211d,#101010 75%);border-radius:7px;font-size:36px;color:#f78d77}
+.music-tile .music-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.music-tile .music-actions button{flex:1;min-width:68px;font-size:10px;padding:7px 6px}
+.music-tile .hint{display:block;min-height:35px;padding-top:5px}
+@media(max-width:900px){.music-editor{grid-template-columns:1fr}}
+@media(max-width:720px){.sidebar{grid-template-columns:repeat(7,1fr)}.nav{font-size:8px}.nav span{font-size:17px}.music-filters{flex-direction:column}.music-filters input,.music-filters select{width:100%;flex:auto}}
+
+</style></head>
+<body>
+<div class="shell">
+<header class="header"><div class="brand"><div class="brand-icon" aria-hidden="true">▦</div><div><b>GLYPH<span>FORGE</span></b><small>NOTHING PHONE (4a) PRO · 137 LED</small></div></div><div class="device"><span class="online" id="device-light"></span><span id="device-status">Браузерный режим</span><button class="ghost mini" id="help-btn" title="Справка">?</button></div></header>
+<div class="layout"><nav class="sidebar" aria-label="Разделы"><button class="nav active" data-tab="studio"><span>✎</span> Студия</button><button class="nav" data-tab="import"><span>⇩</span> Импорт</button><button class="nav" data-tab="library"><span>▥</span> Библиотека</button><button class="nav" data-tab="rules"><span>◉</span> Правила</button><button class="nav" data-tab="scenes"><span>⌁</span> Сценарии</button><button class="nav" data-tab="music"><span>♪</span> Музыка</button><button class="nav" data-tab="ringtone"><span>♫</span> Рингтон</button><div class="nav-foot">13 × 13 · 137 светодиодов<br>Без подписок и аккаунта</div></nav>
+<main class="main">
+<section id="tab-studio" class="page current"><div class="page-title"><div><div class="eyebrow">01 / PIXEL STUDIO</div><h1>Студия <em>глифов</em></h1><p>Рисуй каждый светодиод. Создавай покадровые анимации.</p></div><div class="page-actions"><button class="outline" id="new-project">+ Новый</button><button class="primary" id="save-design">Сохранить в библиотеку</button><button class="outline" id="export-png">PNG</button><button class="outline" id="export-gif">GIF</button></div></div>
+<div class="studio-layout"><div class="panel matrix-panel"><div class="panel-head"><strong>ПРЕДПРОСМОТР MATRIX</strong><span class="tag" id="preview-tag">13×13</span></div><div class="matrix-area"><canvas id="grid" width="520" height="520" aria-label="Интерактивная матрица 13 на 13"></canvas></div><div class="matrix-foot"><span>● АКТИВНЫХ: <b id="lit-count">0</b>/137</span><span>КАДР <b id="frame-number">1</b>/<b id="frame-total">1</b></span></div><div class="player"><button class="primary" id="play-preview">▶ Воспроизвести</button><button class="outline" id="stop-preview">■ Стоп</button><button class="outline" id="play-hardware">↗ На матрицу</button></div><p class="hint">Физический вывод доступен в установленном Android-приложении с официальным SDK.</p></div>
+<div class="panel tools-panel"><div class="panel-head"><strong>РЕДАКТОР</strong><span class="tag">MONOCHROME</span></div><label class="field-label" for="project-name">НАЗВАНИЕ РАБОТЫ</label><input id="project-name" value="Новая анимация" maxlength="80"/><label class="field-label">ИНСТРУМЕНТЫ</label><div class="tool-row"><button class="tool active" data-tool="draw">✎<small>Кисть</small></button><button class="tool" data-tool="erase">⌫<small>Ластик</small></button><button class="tool" data-tool="fill">▰<small>Заливка</small></button><button class="tool" data-tool="line">╱<small>Линия</small></button></div><label class="field-label">ЯРКОСТЬ <span id="brightness-value">100%</span></label><input type="range" id="brightness" min="10" max="255" value="255"/><div class="line"><button class="outline small" id="invert-frame">Инверсия</button><button class="outline small" id="clear-frame">Очистить</button><button class="outline small" id="flip-frame">Отразить</button></div><hr/><label class="field-label">ДЛИТЕЛЬНОСТЬ КАДРА</label><div class="line"><input type="number" id="duration" min="60" max="3000" value="180" step="20"><span class="unit">мс</span></div><label class="field-label">ТАЙМЛАЙН</label><div id="timeline" class="timeline"></div><div class="line"><button class="outline small" id="add-frame">+ Кадр</button><button class="outline small" id="duplicate-frame">⧉ Копировать</button><button class="outline small danger" id="delete-frame">Удалить</button></div></div></div></section>
+<section id="tab-import" class="page"><div class="page-title"><div><div class="eyebrow">02 / MEDIA LAB</div><h1>Импорт <em>медиа</em></h1><p>Конвертируй изображения, GIF и видео в 137 светодиодов.</p></div></div><div class="panel padded"><div class="drop" id="drop-media"><div class="drop-symbol">⇧</div><strong>Перетащи изображение, GIF или видео</strong><p>Или выбери файл с телефона · JPG / PNG / WEBP / GIF / MP4 / WEBM</p><button class="primary" id="choose-media">Выбрать файл</button><input type="file" id="file-media" accept="image/*,video/*" hidden></div><div class="import-options"><div><label class="field-label">СПОСОБ ИМПОРТА</label><select id="import-layout"><option value="auto">Авто — распознать готовую матрицу</option><option value="dots">Точная 13×13 сетка светодиодов</option><option value="fit">Фото — вписать без обрезки</option><option value="crop">Фото — заполнить с обрезкой</option></select><small>Для Running Kitten используй «Авто» или «Точная сетка» — размеры 250 и 500 пикселей распознаются одинаково.</small></div><div><label class="field-label">КАДРОВ В АНИМАЦИИ</label><input id="import-frames" type="number" min="1" max="96" value="32"><small>Максимум 96 кадров за одну операцию; оригинальная длительность GIF сохраняется</small></div><div><label class="field-label">ИНТЕРВАЛ КАДРОВ</label><input id="import-delay" type="number" min="80" max="2000" value="160"><small>Миллисекунды</small></div><div><label class="field-label">КОНТРАСТ</label><input id="import-contrast" type="range" min="0.5" max="3" step="0.1" value="1.4"><small>Детализация точек</small></div><div><label class="field-label">ОБРАБОТКА</label><label class="switch"><input type="checkbox" id="import-invert"> Инвертировать яркость</label><label class="switch"><input type="checkbox" id="import-bw"> Только вкл./выкл.</label></div></div><div class="import-result" id="import-result">Выбери файл для начала импорта. Конвертация выполняется локально.</div></div></section>
+<section id="tab-library" class="page"><div class="page-title"><div><div class="eyebrow">03 / YOUR COLLECTION</div><h1>Библиотека <em>работ</em></h1><p>Свои проекты, GIF и совместимые JSON Glyph Museum с сохранением авторства.</p></div><div class="page-actions"><button class="outline" id="import-json">Импорт JSON / GIF</button><button class="outline" id="export-all">Экспорт библиотеки</button><input type="file" id="file-json" hidden accept=".json,.gforge,image/*,video/*,application/json"></div></div><div class="panel padded"><div class="panel-head"><strong>МОИ ГЛИФЫ</strong><span class="tag" id="library-count">0 проектов</span></div><div id="library-grid" class="gallery"></div></div><div class="panel padded community"><div class="panel-head"><strong>ЧУЖИЕ РАБОТЫ</strong><span class="tag">СООБЩЕСТВО</span></div><p>Просматривай каталоги сообщества внутри приложения, скачивай доступные файлы и импортируй их в GlyphForge. Содержимое чужих сервисов и возможность скачивания определяются их правилами. Поддерживаются файлы Glyph Museum v4 (137 LED), проекты Phone (3) v1 (489 LED) с адаптацией к 13×13, GIF и изображения. Источник и автор сохраняются в библиотеке.</p><div class="line"><button class="outline" id="community-museum">↗ Glyph Museum</button><button class="outline" id="community-playground">↗ Nothing Playground</button></div><p class="hint">Для обмена без сервера используй «Экспорт библиотеки» и отправляй `.gforge` друзьям.</p></div></section>
+<section id="tab-rules" class="page"><div class="page-title"><div><div class="eyebrow">04 / AUTOMATION</div><h1>Правила <em>запуска</em></h1><p>Уведомления, зарядка, звонки и условия выполнения.</p></div></div><div class="panel padded"><div class="panel-head"><strong>НОВОЕ ПРАВИЛО</strong><span class="tag">ЛОКАЛЬНО</span></div><div class="form-grid"><label>СОБЫТИЕ<select id="rule-event"><option value="notification">Новое уведомление</option><option value="call">Входящий звонок (экспериментально)</option><option value="charging">Подключение зарядки</option><option value="charge_removed">Отключение зарядки</option><option value="battery_low">Низкий заряд</option><option value="battery_full">Заряд достиг 100%</option><option value="screen_on">Экран включился *</option><option value="screen_off">Экран выключился *</option><option value="headphones">Наушники подключены *</option><option value="shake">Встряхнуть телефон *</option><option value="external">Команда из Tasker / MacroDroid *</option><option value="time">По времени (неточный запуск)</option></select></label><label>ГЛИФ / СЦЕНАРИЙ<select id="rule-target"></select></label><label>ПРИЛОЖЕНИЕ (ТОЧНОЕ ИМЯ ПАКЕТА)<input id="rule-package" placeholder="org.telegram.messenger или *" list="app-presets"><datalist id="app-presets"><option value="org.telegram.messenger">Telegram</option><option value="com.whatsapp">WhatsApp</option><option value="com.discord">Discord</option><option value="com.vkontakte.android">VK</option><option value="com.instagram.android">Instagram</option><option value="com.google.android.gm">Gmail</option><option value="*">Все приложения</option></datalist></label><label>КЛЮЧЕВОЕ СЛОВО (НЕОБЯЗАТЕЛЬНО)<input id="rule-keyword" placeholder="Например: важное"></label><label>ПОВТОРОВ<select id="rule-repeat"><option>1</option><option>2</option><option selected>3</option><option>5</option></select></label><label>ВРЕМЯ ЗАПУСКА (ДЛЯ СОБЫТИЯ «ПО ВРЕМЕНИ»)<input id="rule-time" type="time" value="21:00"></label><label>НАЧАЛО РАЗРЕШЁННОГО ИНТЕРВАЛА<input id="rule-start" type="time"></label><label>КОНЕЦ РАЗРЕШЁННОГО ИНТЕРВАЛА<input id="rule-end" type="time"></label><label>УСЛОВИЕ ЗАРЯДКИ<select id="rule-charge"><option value="any">Не важно</option><option value="yes">Только при зарядке</option><option value="no">Только без зарядки</option></select></label>
+<label>БАТАРЕЯ ОТ, %<input id="rule-min-battery" type="number" min="0" max="100" placeholder="0 — необязательно"></label>
+<label>БАТАРЕЯ ДО, %<input id="rule-max-battery" type="number" min="0" max="100" placeholder="100 — необязательно"></label>
+<label>СОСТОЯНИЕ ЭКРАНА<select id="rule-screen"><option value="any">Любое</option><option value="on">Включён</option><option value="off">Выключен</option></select></label>
+<label>ПОЛОЖЕНИЕ ТЕЛЕФОНА *<select id="rule-face"><option value="any">Не важно</option><option value="down">Экраном вниз</option><option value="up">Экраном вверх</option></select></label><label>WI-FI (СОЕДИНЕНИЕ)<select id="rule-wifi"><option value="any">Не важно</option><option value="yes">Подключен Wi-Fi</option><option value="no">Без Wi-Fi</option></select></label>
+<label>НАУШНИКИ<select id="rule-headphones"><option value="any">Не важно</option><option value="yes">Подключены</option><option value="no">Не подключены</option></select></label>
+<label>РЕЖИМ «НЕ БЕСПОКОИТЬ»<select id="rule-dnd"><option value="any">Не важно</option><option value="yes">Включён</option><option value="no">Выключен</option></select></label>
+<label>МИНИМАЛЬНЫЙ ИНТЕРВАЛ МЕЖДУ ЗАПУСКАМИ, СЕК<input id="rule-cooldown" type="number" min="0" max="3600" value="3"></label>
+<label>ПРИОРИТЕТ (0–100)<input id="rule-priority" type="number" min="0" max="100" value="50"></label>
+<label>ЯРКОСТЬ ЭФФЕКТА, %<input id="rule-brightness" type="number" min="1" max="100" value="100"></label>
+</div><div class="days"><span class="field-label">ДНИ НЕДЕЛИ</span><div class="day-grid"><label><input class="day-tick" type="checkbox" value="1" checked>Пн</label><label><input class="day-tick" type="checkbox" value="2" checked>Вт</label><label><input class="day-tick" type="checkbox" value="3" checked>Ср</label><label><input class="day-tick" type="checkbox" value="4" checked>Чт</label><label><input class="day-tick" type="checkbox" value="5" checked>Пт</label><label><input class="day-tick" type="checkbox" value="6" checked>Сб</label><label><input class="day-tick" type="checkbox" value="7" checked>Вс</label></div></div><p class="hint">Запуск по времени приблизительный: Android может сдвигать его ради экономии батареи. Условия объединяются по И: событие, дни, заряд, батарея, экран, положение, Wi-Fi, наушники и режим «Не беспокоить». Приоритет выбирает наиболее специфичное правило. * Для экранных событий, наушников и встряхивания требуется активный Android-сервис уведомлений; фоновое выполнение не гарантируется. Для Telegram пакет обычно <code>org.telegram.messenger</code>, для WhatsApp — <code>com.whatsapp</code>. На Android правила уведомлений требуют разрешения в настройках системы.</p><div class="line"><button class="primary" id="add-rule">+ Добавить правило</button><button class="outline" id="notification-access">Доступ к уведомлениям</button><button class="outline" id="phone-access">Доступ к состоянию звонка</button><button class="outline" id="automation-key">Ключ для Tasker / MacroDroid</button></div></div><div class="panel padded"><div class="panel-head"><strong>МОИ ПРАВИЛА</strong><span class="tag" id="rules-count">0</span></div><div id="rules-list" class="stack"></div></div></section>
+<section id="tab-scenes" class="page"><div class="page-title"><div><div class="eyebrow">05 / SCENE MAKER</div><h1>Сценарии <em>эффектов</em></h1><p>Составляй последовательности из нескольких глифов и пауз.</p></div></div><div class="panel padded"><label class="field-label">НАЗВАНИЕ СЦЕНАРИЯ</label><input id="scene-name" placeholder="Например, Вечерний сигнал" value="Новый сценарий"><div class="panel-head scene-head"><strong>ШАГИ</strong><button class="outline small" id="add-step">+ Шаг</button></div><div id="steps-list" class="stack"></div><div class="line"><button class="primary" id="save-scene">Сохранить сценарий</button><button class="outline" id="preview-scene">▶ Просмотреть</button></div></div><div class="panel padded"><div class="panel-head"><strong>СОХРАНЁННЫЕ СЦЕНАРИИ</strong><span class="tag" id="scenes-count">0</span></div><div id="scenes-list" class="stack"></div></div></section>
+
+<section id="tab-music" class="page">
+  <div class="page-title"><div><div class="eyebrow">06 / MUSIC REACTIVE</div><h1>Музыкальные <em>глифы</em></h1><p>Световые эффекты реагируют на аудио. Сохраняй свои варианты, импортируй чужие и используй любой собственный рисунок.</p></div></div>
+  <div class="panel padded">
+    <div class="panel-head"><strong>БИБЛИОТЕКА ЭФФЕКТОВ</strong><span class="tag" id="music-count">0 эффектов</span></div>
+    <div class="line music-filters"><input id="music-search" type="search" placeholder="Поиск: бас, круг, рисунок, эквалайзер…" aria-label="Поиск музыкальных глифов"><select id="music-category" aria-label="Категория"><option value="all">Все</option><option value="builtin">Шаблоны</option><option value="user">Сохранённые мной</option></select></div>
+    <div class="gallery" id="music-presets" aria-live="polite"></div>
+    <hr><p class="hint">Для работ других авторов открой Nothing Playground или Glyph Museum, сохрани разрешённый автором GIF/JSON и импортируй его в «Библиотеку». Затем выбери этот глиф в режиме «Свой рисунок» — он будет реагировать на ритм. Доступ к чужим серверам не подразумевает свободного скачивания всех работ.</p>
+    <div class="line"><button class="outline" id="music-community-museum">Поиск в Glyph Museum</button><button class="outline" id="music-community-playground">Nothing Playground</button><button class="outline" id="music-open-library">Открыть мою библиотеку</button></div>
+  </div>
+  <div class="music-editor">
+    <div class="panel padded">
+      <div class="panel-head"><strong>КОНСТРУКТОР МУЗЫКАЛЬНЫХ ГЛИФОВ</strong><span class="tag">LIVE</span></div>
+      <div class="form-grid">
+        <label>НАЗВАНИЕ ЭФФЕКТА<input id="music-title" maxlength="80" value="Мой музыкальный глиф"></label>
+        <label>ТИП АНИМАЦИИ<select id="music-mode"><option value="bars">Эквалайзер · столбцы</option><option value="ring">Круг · удар баса</option><option value="wave">Звуковая волна</option><option value="spark">Искры · вспышки</option><option value="orbit">Вращающийся импульс</option><option value="art">Мой глиф · пульсация яркости</option></select></label>
+        <label>ИЗОБРАЖЕНИЕ ИЗ БИБЛИОТЕКИ<select id="music-design"></select></label>
+        <label>ЧУВСТВИТЕЛЬНОСТЬ: <b id="music-sens-value">160%</b><input type="range" id="music-sens" min="50" max="450" step="10" value="160"></label>
+        <label>СГЛАЖИВАНИЕ: <b id="music-smooth-value">55%</b><input type="range" id="music-smooth" min="0" max="94" step="2" value="55"></label>
+        <label>ЯРКОСТЬ: <b id="music-bright-value">95%</b><input type="range" id="music-bright" min="10" max="100" step="5" value="95"></label>
+      </div>
+      <div class="line"><button class="primary" id="music-save">+ Сохранить вариант</button><button class="outline" id="music-export">⇩ Экспорт .gforgebeat</button><button class="outline" id="music-import">⇧ Импорт пресета</button><input type="file" id="music-import-file" accept=".gforgebeat,.json,application/json" hidden></div>
+    </div>
+    <div class="panel padded music-preview-panel">
+      <div class="panel-head"><strong>ПРЕДПРОСМОТР · 137 LED</strong><span class="tag" id="music-preview-state">ОЖИДАНИЕ</span></div>
+      <canvas id="music-preview" width="320" height="320" role="img" aria-label="Предпросмотр музыкальных эффектов Glyph Matrix"></canvas>
+      <div class="music-meter"><div id="music-meter-fill"></div></div>
+      <label class="field-label">ПРОВЕРИТЬ ПОД СВОЮ МУЗЫКУ</label>
+      <input type="file" id="music-audio-file" accept="audio/*">
+      <audio id="music-audio-player" controls preload="metadata"></audio>
+      <div class="line"><button class="outline" id="music-demo">▶ Демо без аудио</button><button class="outline" id="music-preview-stop">■ Остановить</button></div>
+      <p class="hint">Предпросмотр работает с выбранным аудиофайлом, который остаётся на устройстве. Режим демо использует искусственный ритм и не анализирует окружающие звуки.</p>
+    </div>
+  </div>
+  <div class="panel padded">
+    <div class="panel-head"><strong>ЗАПУСК НА NOTHING PHONE</strong><span class="tag">ANDROID</span></div>
+    <div class="form-grid"><label>ИСТОЧНИК ЗВУКА<select id="music-source"><option value="mix">Выходной аудиомикс (Android Visualizer)</option><option value="capture">Захват воспроизведения (с системным разрешением)</option></select></label><div><label class="field-label">СОСТОЯНИЕ</label><div id="music-native-status" class="notice">Не запущено</div></div></div>
+    <div class="line"><button class="primary" id="music-native-start">▶ Запустить на Glyph Matrix</button><button class="outline" id="music-native-stop">■ Остановить</button></div>
+    <p class="notice"><strong>Важно:</strong> доступ к анализу музыки нужно разрешить вручную. Android показывает постоянное уведомление во время работы. Никаких записей музыки в файл или отправки на сервер нет. Некоторые музыкальные приложения запрещают захват аудио. Вывод на физическую матрицу и реакцию на музыку необходимо проверить на Phone (4a) Pro после сборки APK.</p>
+  </div>
+</section>
+
+<section id="tab-ringtone" class="page"><div class="page-title"><div><div class="eyebrow">06 / SOUND & LIGHT</div><h1>Звук <em>и свет</em></h1><p>Подбери свою мелодию и анимацию для звонка.</p></div></div><div class="panel padded"><div class="panel-head"><strong>МОЙ РИНГТОН</strong><span class="tag">BETA</span></div><div class="ring-grid"><div><label class="field-label">АУДИОФАЙЛ</label><input type="file" id="ring-file" accept="audio/*"><div id="ring-audio-info" class="hint">Поддерживаемые браузером аудиоформаты, например MP3/OGG.</div><audio id="ring-audio" controls></audio></div><div><label class="field-label">ГЛИФ ДЛЯ ЗВОНКА</label><select id="ring-design"></select><label class="field-label">ЗАПУСТИТЬ АНИМАЦИЮ</label><div class="line"><button class="primary" id="ring-preview">▶ Проверить вместе</button><button class="outline" id="ring-stop">Стоп</button></div></div></div><hr/><p class="notice"><strong>Техническое ограничение:</strong> эта версия синхронизирует аудио и анимацию в предпросмотре. Прямое назначение собственного светового рингтона на системный входящий звонок ещё не реализовано: Android и Nothing OS не предоставляют в проверенном SDK гарантированной замены системного шаблона вызова. Для мелодии можно открыть системные настройки звука.</p><div class="line"><button class="outline" id="export-ringtone">Сохранить аудио в Загрузки</button><button class="outline" id="system-ringtone">Открыть настройки рингтона</button></div></div></section>
+</main></div><footer class="bottom">GLYPHFORGE · LOCAL-FIRST · OPEN SOURCE MVP <span id="toast" role="status"></span></footer>
+</div><dialog id="help-dialog"><h2>GlyphForge · инструкция</h2><p>Начни в «Студии»: рисуй точки и добавляй кадры. Сохрани работу и назначай её в «Правилах». Импорт поддерживает изображения, а также GIF/видео там, где браузер может декодировать кадры.</p><p>На компьютере работает интерфейс и предпросмотр. Физическая матрица, уведомления и звонки требуют сборки Android-приложения с официальным Nothing SDK и разрешений.</p><button class="primary" id="close-help">Понятно</button></dialog><script>
+/* GlyphForge format helpers. Nothing/Glyph Museum LED order: row major, 137 active pixels. */
+(function(root){'use strict';
+const ROWS13=[5,9,11,11,13,13,13,13,13,11,11,9,5];
+const ROWS25=[7,11,15,17,19,21,21,23,23,25,25,25,25,25,25,25,23,23,21,21,19,17,15,11,7];
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const mask=(n,rows)=>{let indices=[];for(let y=0;y<n;y++){let start=(n-rows[y])/2;for(let x=0;x<rows[y];x++)indices.push(y*n+start+x)}return indices};
+const IND13=mask(13,ROWS13),IND25=mask(25,ROWS25);
+function square(arr){if(!Array.isArray(arr))throw Error('Кадр не содержит массива яркости');let out=new Array(169).fill(0);if(arr.length===137){IND13.forEach((i,k)=>out[i]=clamp(Math.round(+arr[k]||0),0,255));}
+ else if(arr.length===169){IND13.forEach(i=>out[i]=clamp(Math.round(+arr[i]||0),0,255))}
+ else if(arr.length===489 || arr.length===625){let full=new Array(625).fill(0);if(arr.length===489)IND25.forEach((i,k)=>full[i]=+arr[k]||0);else full=arr;
+  // Downsample 25x25 -->13x13 without transposing, nearest source LED for sharp pixel art.
+  IND13.forEach(i=>{const y=i/13|0,x=i%13;const sy=Math.round(y*24/12),sx=Math.round(x*24/12);out[i]=clamp(Math.round(full[sy*25+sx]||0),0,255)});
+ }else throw Error('Неверная матрица: '+arr.length+' значений, ожидается 137, 169 или 489');return out;}
+function safeMeta(raw){if(!raw || typeof raw!=='object' || Array.isArray(raw))return null;let m={};if(typeof raw.author==='string')m.author=raw.author.slice(0,100);if(Number.isSafeInteger(raw.postId)&&raw.postId>0)m.postId=raw.postId;
+ if(typeof raw.url==='string'&&/^https:\/\/(app\.glyphmuseum\.com|glyphmuseum\.com)\//.test(raw.url))m.url=raw.url.slice(0,500);
+ if(m.postId)m.url='https://app.glyphmuseum.com/post/'+m.postId;return Object.keys(m).length?m:null;}
+function normalizeDesign(input){const raw=input&&input.design&&Array.isArray(input.design.frames)?input.design:input;if(!raw||!Array.isArray(raw.frames)||raw.frames.length===0)throw Error('Не найдены кадры');
+ let frames=raw.frames.slice(0,400).map(f=>{let p=Array.isArray(f)?f:(f?.pixels||f?.p);return {pixels:square(p),duration:clamp(Math.round(Number(f?.duration??f?.d??f?.ms??100)||100),60,3000)}});
+ const meta=safeMeta(raw.meta||input.meta);return {title:String(raw.title||raw.name||'Импортированный глиф').slice(0,80),source:String(raw.source||((raw.v===4||raw.v===1)?'Glyph Museum':'Импорт')).slice(0,100),frames, ...(meta?{meta}:{}),...(raw.id?{id:String(raw.id).slice(0,100)}:{})};}
+function exportMuseum(design){const n=normalizeDesign(design);return {v:4,frames:n.frames.map(f=>({d:f.duration,p:IND13.map(i=>f.pixels[i])})),...(n.meta?{meta:n.meta}:{})};}
+function getRuns(flags){let s=-1,r=[];for(let i=0;i<=flags.length;i++){if(i<flags.length&&flags[i]&&s<0)s=i;else if((i===flags.length||!flags[i])&&s>=0){r.push([s,i-1]);s=-1}}return r;}
+function dotGeometry(image){let w=image.displayWidth||image.videoWidth||image.width,h=image.displayHeight||image.videoHeight||image.height;
+ if(!Number.isFinite(w)||!Number.isFinite(h)||w<130||h<130||Math.abs(w/h-1)>.14||w>1500||h>1500)return null;
+ const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d',{willReadFrequently:true});g.clearRect(0,0,w,h);g.drawImage(image,0,0,w,h);
+ const data=g.getImageData(0,0,w,h).data;let hor=new Uint8Array(w),ver=new Uint8Array(h);
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4;if(data[i+3]<128)continue;const v=Math.max(data[i],data[i+1],data[i+2]);if(v>34){hor[x]=1;ver[y]=1}}
+ const rx=getRuns(hor),ry=getRuns(ver);if(rx.length<6||ry.length<3||rx.length>15||ry.length>15)return null;
+ const centers=r=>r.map(([a,b])=>(a+b)/2);
+ const xs=centers(rx),ys=centers(ry);
+ const pitch=axis=>{const diffs=axis.slice(1).map((v,i)=>v-axis[i]).filter(v=>v>3).sort((a,b)=>a-b);if(!diffs.length)return 0;const low=diffs[0];const accepted=diffs.filter(v=>Math.abs(v-low)<low*.19);return accepted.length?accepted.reduce((a,b)=>a+b,0)/accepted.length:low};
+ const px=pitch(xs),py=pitch(ys),p=(px+py)/2;
+ if(!p||Math.abs(px-py)/p>.10||p<w/19||p>w/11)return null;
+ const originX=(w-12*p)/2,originY=(h-12*p)/2;
+ const align=(values,origin)=>values.every(v=>{const k=Math.round((v-origin)/p);return k>=0&&k<13&&Math.abs(v-(origin+k*p))<p*.13});
+ if(!align(xs,originX)||!align(ys,originY))return null;
+ return {w,h,p,originX,originY,canvas:c,confidence:1};
+}
+function rasterToPixels(image,options={}){let mode=options.mode||'auto',contrast=+options.contrast||1.4,invert=!!options.invert,bw=!!options.bw;
+ const w=image.displayWidth||image.videoWidth||image.width,h=image.displayHeight||image.videoHeight||image.height;
+ if(!w||!h)throw Error('Невозможно прочитать размеры');
+ const dot=mode==='fit'||mode==='crop'?null:dotGeometry(image);
+ if(mode==='dots'&&!dot)throw Error('На изображении не найдена точная 13×13 сетка светодиодов');
+ let out=new Array(169).fill(0);
+ if(dot){const g=dot.canvas.getContext('2d',{willReadFrequently:true}),data=g.getImageData(0,0,dot.w,dot.h).data;
+  IND13.forEach(i=>{const x=i%13,y=i/13|0,cx=Math.round(dot.originX+x*dot.p),cy=Math.round(dot.originY+y*dot.p);let samples=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+    let X=clamp(cx+dx,0,dot.w-1),Y=clamp(cy+dy,0,dot.h-1),p=(Y*dot.w+X)*4;
+    samples.push((.2126*data[p]+.7152*data[p+1]+.0722*data[p+2])*(data[p+3]/255));}
+    samples.sort((a,b)=>a-b);let v=samples[4];v=v<18?0:clamp(Math.round(v),0,255);if(invert)v=255-v;if(bw)v=v>=125?255:0;out[i]=v;
+  });return out;}
+ const c=document.createElement('canvas');c.width=c.height=13;const g=c.getContext('2d',{willReadFrequently:true});g.fillStyle='#000';g.fillRect(0,0,13,13);
+ const scale=(mode==='fit'?Math.min:Math.max)(13/w,13/h);g.drawImage(image,(13-w*scale)/2,(13-h*scale)/2,w*scale,h*scale);
+ const d=g.getImageData(0,0,13,13).data;IND13.forEach(i=>{const n=i*4,lum=(.2126*d[n]+.7152*d[n+1]+.0722*d[n+2]);let v=clamp(Math.round((lum-128)*contrast+128),0,255);if(invert)v=255-v;if(bw)v=v>=135?255:0;out[i]=v});return out;
+}
+root.GlyphFormat={ROWS13,IND13,normalizeDesign,exportMuseum,rasterToPixels,dotGeometry,square};
+})(window);
+
+</script><script>
+window.GlyphForgeSampleKitten={"title":"Running Kitten \u00b7 \u043f\u0440\u0438\u043c\u0435\u0440 \u0438\u043c\u043f\u043e\u0440\u0442\u0430","source":"\u041f\u0440\u0438\u0441\u043b\u0430\u043d\u043d\u044b\u0439 GIF","frames":[{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,87,168,0,0,0,0,0,0,0,0,0,0,87,168,168,129,0,0,0,0,90,127,127,113,129,0,87,168,255,129,255,255,127,127,255,129,0,0,0,0,0,255,255,255,129,255,255,255,255,129,0,0,0,0,255,255,255,255,255,225,0,0,87,255,0,0,255,255,0,0,0,0,0,0,0,0,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,111,111,0,0,0,75,0,0,0,0,0,113,111,0,0,179,0,75,179,0,0,0,0,111,113,0,0,0,0,75,179,179,75,253,129,253,253,253,253,111,0,0,0,75,179,253,253,253,253,253,253,158,253,253,0,0,0,0,253,253,253,253,221,0,0,0,0,75,0,0,253,253,253,0,0,0,0,0,0,0,0,0,253,253,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,179,0,0,0,0,0,0,0,0,0,0,0,129,0,0,0,0,0,87,0,0,0,0,0,113,0,0,0,0,0,87,179,0,0,0,0,111,113,0,0,0,0,87,179,179,87,0,0,127,127,253,111,0,0,0,0,87,179,253,253,208,253,253,253,158,253,253,0,0,0,0,253,253,253,253,221,0,0,0,0,0,0,0,0,253,253,253,208,0,0,0,0,0,0,0,253,253,253,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,87,0,0,0,0,0,0,0,0,129,0,0,87,168,87,0,0,0,0,0,0,129,0,0,87,168,168,255,207,0,127,127,0,113,0,0,0,0,87,168,207,255,255,111,111,113,0,0,0,0,0,0,0,111,255,255,209,255,255,0,0,0,0,0,0,0,0,221,255,209,221,221,0,0,0,0,0,0,0,0,255,0,0,255,255,0,0,0,0,0,0,0,0,255,0,0,0,255,0,0,0,0,0,0,0,0,0,255,0,0,255,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,87,170,87,0,0,111,111,0,0,0,0,170,87,170,170,255,207,111,127,127,111,113,129,170,0,0,87,170,207,255,255,111,111,113,0,0,0,0,0,0,0,111,255,255,209,255,255,0,0,0,0,0,0,0,0,221,255,0,221,221,0,0,0,0,0,0,0,0,255,0,0,255,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,255,111,0,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,87,169,0,0,0,0,0,0,0,0,0,0,87,169,169,87,0,0,0,0,0,0,0,0,0,0,87,169,169,255,127,127,127,127,0,0,113,169,0,0,0,255,255,113,255,113,113,113,113,0,0,0,0,0,0,255,228,209,228,255,113,0,0,0,0,0,0,0,221,255,0,221,255,0,0,0,0,0,0,0,0,0,113,255,0,0,255,110,0,0,0,0,0,0,0,0,0,255,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"duration":90},{"pixels":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,87,0,0,0,0,0,0,0,0,0,0,0,87,169,0,0,0,0,0,0,0,0,0,0,87,169,169,87,0,0,0,0,0,0,0,0,0,0,87,169,255,87,255,255,127,127,113,113,0,0,0,0,0,87,158,255,255,111,127,255,0,113,169,0,0,221,255,158,209,255,255,255,225,0,0,0,0,255,37,0,0,0,0,221,255,255,111,111,0,0,158,0,0,0,0,0,0,0,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"duration":90}]};
+
+</script><script>
+/*
+ * GlyphForge standalone GIF89a/GIF87a decoder, original implementation.
+ * Supports indexed palettes, LZW, transparency, interlace, and disposal.
+ * The caller converts each composited image immediately to 13x13 pixels.
+ */
+(function(){'use strict';
+function decode(buffer,limit,convert){
+ const a=new Uint8Array(buffer);let off=0;
+ const u8=()=>{if(off>=a.length)throw Error('GIF обрезан');return a[off++]};
+ const u16=()=>u8()|(u8()<<8);
+ const bytes=n=>{if(off+n>a.length)throw Error('GIF обрезан');let r=a.subarray(off,off+n);off+=n;return r};
+ const string=n=>String.fromCharCode(...bytes(n));
+ function colors(n){const p=[];for(let i=0;i<n;i++)p.push([u8(),u8(),u8()]);return p}
+ function blocks(){const chunks=[];let total=0;while(true){const n=u8();if(!n)break;chunks.push(bytes(n));total+=n;if(total>80e6)throw Error('Слишком большой GIF')}let result=new Uint8Array(total),pos=0;for(const c of chunks){result.set(c,pos);pos+=c.length}return result}
+ function lzw(minCode,raw,expected){
+  if(minCode<2||minCode>8)throw Error('Неверный LZW');
+  const clear=1<<minCode,stop=clear+1;
+  let table=[],codeSize=minCode+1,nextCode=stop+1,bit=0,previous=null;
+  function reset(){table=[];for(let i=0;i<clear;i++)table.push([i]);table.push(null,null);codeSize=minCode+1;nextCode=stop+1;previous=null}
+  function readCode(){if(bit+codeSize>raw.length*8)return -1;let code=0;for(let i=0;i<codeSize;i++){code|=((raw[(bit+i)>>3]>>((bit+i)&7))&1)<<i}bit+=codeSize;return code}
+  reset();const out=new Uint8Array(expected);let count=0;
+  while(true){const code=readCode();if(code<0||code===stop)break;if(code===clear){reset();continue}
+   let entry;if(table[code])entry=table[code];else if(code===nextCode&&previous)entry=previous.concat(previous[0]);else break;
+   for(const index of entry)if(count<expected)out[count++]=index;
+   if(previous&&nextCode<4096){table[nextCode++]=previous.concat(entry[0]);if(nextCode===(1<<codeSize)&&codeSize<12)codeSize++}
+   previous=entry;if(count>=expected)break;
+  }
+  return out;
+ }
+ const sig=string(6);if(sig!=='GIF89a'&&sig!=='GIF87a')throw Error('Это не GIF');
+ const width=u16(),height=u16(),packed=u8(),bgIndex=u8();u8();
+ if(width<1||height<1||width*height>4_000_000)throw Error('Слишком большой размер GIF');
+ const global=(packed&128)?colors(1<<((packed&7)+1)):null;
+ const pixels=new Uint8ClampedArray(width*height*4);let gce={delay:160,transparent:-1,disposal:0};
+ const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const ctx=canvas.getContext('2d',{willReadFrequently:true});
+ let frames=[];
+ while(off<a.length){const sep=u8();if(sep===0x3b)break;
+  if(sep===0x21){const label=u8();if(label===0xf9){let length=u8();if(length<4)throw Error('Битый graphic-control');let p=u8(),delay=u16(),trans=u8();if(length>4)bytes(length-4);u8();gce={delay:Math.max(60,delay*10||160),transparent:(p&1)?trans:-1,disposal:(p>>2)&7};}
+   else blocks();continue;}
+  if(sep!==0x2c)throw Error('Неизвестный GIF блок '+sep);
+  let left=u16(),top=u16(),fw=u16(),fh=u16(),fp=u8();
+  if(fw<1||fh<1||fw*fh>4_000_000)throw Error('Недопустимый размер кадра');
+  let palette=(fp&128)?colors(1<<((fp&7)+1)):global;
+  let minCode=u8(),indices=lzw(minCode,blocks(),fw*fh);
+  const before=gce.disposal===3?pixels.slice():null;
+  let rows=[];if(fp&64){for(const [start,step] of [[0,8],[4,8],[2,4],[1,2]])for(let y=start;y<fh;y+=step)rows.push(y)}else{for(let y=0;y<fh;y++)rows.push(y)}
+  for(let ri=0;ri<fh;ri++){let y=top+rows[ri];if(y<0||y>=height)continue;
+   for(let x=0;x<fw;x++){let dx=x+left;if(dx>=width)continue;const idx=indices[ri*fw+x];if(idx===gce.transparent)continue;const color=palette?.[idx]||[0,0,0],di=(y*width+dx)*4;
+    pixels[di]=color[0];pixels[di+1]=color[1];pixels[di+2]=color[2];pixels[di+3]=255;
+   }
+  }
+  const image=new ImageData(pixels.slice(),width,height);ctx.putImageData(image,0,0);
+  frames.push(convert(canvas,gce.delay));
+  if(frames.length>=limit)break;
+  if(gce.disposal===2){for(let y=top;y<top+fh&&y<height;y++)for(let x=left;x<left+fw&&x<width;x++){let i=(y*width+x)*4;pixels[i]=0;pixels[i+1]=0;pixels[i+2]=0;pixels[i+3]=0;}}
+  else if(gce.disposal===3&&before)pixels.set(before);
+  gce={delay:160,transparent:-1,disposal:0};
+ }
+ return frames;
+}
+window.GlyphGIF={decode};
+})();
+
+</script><script>
+/* Original small, standards-compatible GIF89a exporter for GlyphForge (13x13 grayscale). */
+(function(){'use strict';
+window.GlyphGIFExport=function(frames){
+ const bytes=[];const b=n=>bytes.push(n&255),word=n=>{b(n);b(n>>8)},ascii=s=>{for(const c of s)b(c.charCodeAt(0))};
+ ascii('GIF89a');word(13);word(13);b(0xf7);b(0);b(0); // 256-color global palette
+ for(let i=0;i<256;i++){b(i);b(i);b(i)}
+ // Application extension: animation loops forever
+ b(0x21);b(0xff);b(11);ascii('NETSCAPE2.0');b(3);b(1);word(0);b(0);
+ const packCodes=indices=>{
+   const data=[];let buffer=0,bits=0;
+   const writeCode=c=>{buffer|=c<<bits;bits+=9;while(bits>=8){data.push(buffer&255);buffer>>>=8;bits-=8}};
+   // Correct but intentionally simple LZW stream: clear dictionary between pixels.
+   writeCode(256);
+   indices.forEach((c,i)=>{if(i)writeCode(256);writeCode(c)});
+   writeCode(257);if(bits)data.push(buffer&255);
+   return data;
+ };
+ for(const frame of frames.slice(0,200)){
+  const delay=Math.max(2,Math.min(300,Math.round((frame.duration||180)/10)));
+  b(0x21);b(0xf9);b(4);b(0x08);word(delay);b(0);b(0);
+  b(0x2c);word(0);word(0);word(13);word(13);b(0);
+  b(8);const data=packCodes(frame.pixels.map(v=>Math.max(0,Math.min(255,Math.round(+v||0)))));
+  for(let i=0;i<data.length;i+=255){const s=data.slice(i,i+255);b(s.length);for(let v of s)b(v)}b(0);
+ }
+ b(0x3b);return new Blob([new Uint8Array(bytes)],{type:'image/gif'});
+};
+})();
+
+</script><script>
+/* GlyphForge: local-first editor, vanilla JS, no accounts, no analytics. */
+(()=>{'use strict';
+const $=id=>document.getElementById(id), $$=q=>[...document.querySelectorAll(q)];
+const N=13, LED=137, MAX_IMPORT=96, MASK=Array.from({length:169},(_,i)=>{const x=i%13-6,y=(i/13|0)-6;return x*x+y*y<=41;});
+const blank=()=>Array(169).fill(0), clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const defaultFrame=(pix=blank(),duration=180)=>({pixels:pix.slice(0,169),duration});
+const clone=o=>JSON.parse(JSON.stringify(o));
+const text=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function heart(scale=1){const p=blank();for(let y=0;y<13;y++)for(let x=0;x<13;x++){const X=(x-6)/scale,Y=(y-6)/scale;let hx=X/4.1, hy=-(Y+0.1)/4.1;let f=(hx*hx+hy*hy-1)**3-hx*hx*hy*hy*hy;if(MASK[y*13+x]&&f<=0)p[y*13+x]=255;}return p}
+function spark(t){let p=blank();for(let y=0;y<13;y++)for(let x=0;x<13;x++){const dx=x-6,dy=y-6,d=Math.hypot(dx,dy);if(MASK[y*13+x]&&(Math.abs(d-t)<.6||(t<1&&d<1)))p[y*13+x]=250;}return p}
+function makeStarter(){return [{id:id(),title:'Сердцебиение',frames:[defaultFrame(heart(.83),170),defaultFrame(heart(1.08),200),defaultFrame(heart(.83),160)],source:'Шаблон'},{id:id(),title:'Круговая волна',frames:[0,1.5,3,4.5,6].map(x=>defaultFrame(spark(x),125)),source:'Шаблон'}]}
+let state={version:3,designs:[...makeStarter(),...(window.GlyphForgeSampleKitten?[{...window.GlyphForgeSampleKitten,id:'sample-running-kitten'}]:[])],rules:[],scenes:[]};
+try{const fromNative=window.GlyphNative?.getState?.();const fromBrowser=localStorage.getItem('glyphforge-state-v1');const raw=fromNative||fromBrowser;if(raw){const saved=JSON.parse(raw);if(saved&&Array.isArray(saved.designs)&&Array.isArray(saved.rules)&&Array.isArray(saved.scenes))state=saved;}}catch(e){console.warn('Could not restore state',e)}
+if(state.version<2 && window.GlyphForgeSampleKitten && !state.designs.some(d=>d.id==='sample-running-kitten')){state.designs.push({...window.GlyphForgeSampleKitten,id:'sample-running-kitten'});state.version=2;}
+let project={id:null,title:'Новая анимация',frames:[defaultFrame()]},selected=0,tool='draw',brightness=255,dragging=false,lineStart=null,playTimer=null,playIndex=0,stopTimer=null,playing=false,sceneSteps=[{assetId:'',pause:0}],ringUrl=null,ringBlob=null;
+let lastNativeStatus='';
+const notify=s=>{const n=$('toast');n.textContent=s;clearTimeout(notify.timer);notify.timer=setTimeout(()=>n.textContent='',4600)};
+const hardware=!!window.GlyphNative; const sdkReady=hardware&&!!window.GlyphNative.sdkAvailable?.(); $('device-status').textContent=hardware?(sdkReady?'Android · SDK установлен':'Android · SDK отсутствует'):'Браузер · предпросмотр';if(sdkReady)$('device-light').classList.add('connected');
+window.onNativeStatus=(status)=>{$('device-status').textContent=status;lastNativeStatus=status;notify(status)};
+function persist(){const serialized=JSON.stringify(state);try{localStorage.setItem('glyphforge-state-v1',serialized)}catch(e){console.warn('localStorage full: android backup used',e)}try{window.GlyphNative?.saveState?.(serialized)}catch(e){console.warn(e)}}
+function goto(tab){$$('.page').forEach(p=>p.classList.toggle('current',p.id==='tab-'+tab));$$('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='library')renderLibrary();if(tab==='rules')renderRules();if(tab==='scenes')renderScenes();if(tab==='ringtone')fillSelects();if(tab==='music')window.GlyphMusicRefresh?.();window.scrollTo({top:0,behavior:'instant'})}
+$$('.nav').forEach(b=>b.onclick=()=>goto(b.dataset.tab));
+function frame(){return project.frames[selected]}
+function normalizeFrame(p){return Array.from({length:169},(_,i)=>MASK[i]?clamp(Math.round(Number(p?.[i])||0),0,255):0)}
+function normalizeDesign(raw){try{const a=window.GlyphFormat.normalizeDesign(raw);return {...a,id:a.id||id(),frames:a.frames.slice(0,400)};}catch(e){console.warn('Неизвестный формат',e.message);return null}}
+
+function setProject(src){const a=normalizeDesign(src);if(!a)return;project=clone(a);selected=0;$('project-name').value=project.title;refreshEditor();goto('studio')}
+function refreshEditor(){selected=clamp(selected,0,project.frames.length-1);$('duration').value=frame().duration;$('frame-number').textContent=selected+1;$('frame-total').textContent=project.frames.length;$('lit-count').textContent=frame().pixels.filter((v,i)=>MASK[i]&&v>0).length;renderMatrix();renderTimeline()}
+const grid=$('grid'),ctx=grid.getContext('2d');
+function paintMatrix(c,pixels,size=520){const dpr=1,csize=size;c.width=size;c.height=size;const g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);g.fillStyle='#141414';g.beginPath();g.arc(size/2,size/2,size*.479,0,Math.PI*2);g.fill();g.strokeStyle='#313131';g.lineWidth=Math.max(1,size*.004);g.stroke();const unit=size/13.8,origin=(size-unit*12)/2;for(let y=0;y<13;y++)for(let x=0;x<13;x++){const i=y*13+x;if(!MASK[i])continue;const v=clamp(pixels[i]||0,0,255),cx=origin+x*unit,cy=origin+y*unit,r=unit*.36;g.beginPath();g.arc(cx,cy,r,0,7);g.fillStyle=v?'rgb('+v+','+v+','+v+')':'#343434';if(v>=120&&size>=300){g.shadowBlur=12*g.canvas.width/520;g.shadowColor='rgba(255,255,255,.38)'}g.fill();g.shadowBlur=0;}}
+function renderMatrix(p=frame().pixels){paintMatrix(grid,p,520)}
+function eventCell(ev){const box=grid.getBoundingClientRect(),x=(ev.clientX-box.left)*520/box.width,y=(ev.clientY-box.top)*520/box.height,unit=520/13.8,origin=(520-unit*12)/2,cx=Math.round((x-origin)/unit),cy=Math.round((y-origin)/unit);if(cx<0||cx>12||cy<0||cy>12||!MASK[cy*13+cx])return null;return {x:cx,y:cy,i:cy*13+cx}}
+function markCell(cell){if(!cell)return;const p=frame().pixels;if(tool==='draw')p[cell.i]=brightness;else if(tool==='erase')p[cell.i]=0;else if(tool==='fill'){const target=p[cell.i],next=brightness;if(target!==next){const q=[cell.i],visited=new Set();while(q.length){const i=q.pop();if(visited.has(i)||!MASK[i]||p[i]!==target)continue;visited.add(i);p[i]=next;const x=i%13,y=i/13|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const X=x+dx,Y=y+dy;if(X>=0&&X<13&&Y>=0&&Y<13)q.push(Y*13+X)}}}}else if(tool==='line'){if(!lineStart){lineStart=cell;notify('Выбери конечную точку линии');return}const steps=Math.max(Math.abs(cell.x-lineStart.x),Math.abs(cell.y-lineStart.y));for(let n=0;n<=steps;n++){const x=Math.round(lineStart.x+(cell.x-lineStart.x)*(steps?n/steps:0)),y=Math.round(lineStart.y+(cell.y-lineStart.y)*(steps?n/steps:0));if(MASK[y*13+x])p[y*13+x]=brightness}lineStart=null;}$('lit-count').textContent=p.filter((v,i)=>MASK[i]&&v>0).length;renderMatrix();renderTimeline();}
+grid.addEventListener('pointerdown',ev=>{dragging=true;grid.setPointerCapture(ev.pointerId);markCell(eventCell(ev))});grid.addEventListener('pointermove',ev=>{if(dragging&&(tool==='draw'||tool==='erase'))markCell(eventCell(ev))});grid.addEventListener('pointerup',()=>{dragging=false});grid.addEventListener('pointercancel',()=>{dragging=false});
+$$('[data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;lineStart=null;$$('[data-tool]').forEach(x=>x.classList.toggle('active',x===b))});
+$('brightness').oninput=()=>{brightness=+$('brightness').value;$('brightness-value').textContent=Math.round(brightness/255*100)+'%'};
+$('duration').oninput=()=>{frame().duration=clamp(+$('duration').value||180,60,3000);renderTimeline()};
+$('add-frame').onclick=()=>{if(project.frames.length>=200)return notify('В редакторе максимум 200 кадров');project.frames.splice(selected+1,0,defaultFrame());selected++;refreshEditor()};
+$('duplicate-frame').onclick=()=>{if(project.frames.length>=200)return;project.frames.splice(selected+1,0,clone(frame()));selected++;refreshEditor()};
+$('delete-frame').onclick=()=>{if(project.frames.length===1)return notify('Оставь хотя бы один кадр');project.frames.splice(selected,1);selected=Math.max(0,selected-1);refreshEditor()};
+$('clear-frame').onclick=()=>{frame().pixels=blank();refreshEditor()};
+$('invert-frame').onclick=()=>{frame().pixels=frame().pixels.map((v,i)=>MASK[i]?255-v:0);refreshEditor()};
+$('flip-frame').onclick=()=>{let src=frame().pixels;frame().pixels=src.map((_,i)=>MASK[i]?src[(i/13|0)*13+(12-i%13)]:0);refreshEditor()};
+function renderTimeline(){const out=$('timeline');out.innerHTML='';project.frames.forEach((f,i)=>{const tile=document.createElement('button');tile.className='frame-tile'+(i===selected?' active':'');tile.innerHTML='<canvas width="90" height="90"></canvas><small>'+(i+1)+' · '+f.duration+'мс</small>';tile.onclick=()=>{selected=i;refreshEditor()};out.appendChild(tile);paintMatrix(tile.querySelector('canvas'),f.pixels,90)})}
+function previewFrames(frames,onStop){stopPreview(false);if(!frames.length)return;let i=0;playing=true;$('play-preview').textContent='Ⅱ Пауза';const next=()=>{if(!playing)return;const f=frames[i];renderMatrix(f.pixels);$('frame-number').textContent=i+1;$('frame-total').textContent=frames.length;i=(i+1)%frames.length;playTimer=setTimeout(next,clamp(Number(f.duration)||180,60,3000))};next();stopTimer=onStop||null}
+function stopPreview(reset=true){playing=false;clearTimeout(playTimer);$('play-preview').textContent='▶ Воспроизвести';if(reset){$('frame-number').textContent=selected+1;$('frame-total').textContent=project.frames.length;renderMatrix()}if(stopTimer){const cb=stopTimer;stopTimer=null;cb()}}
+$('play-preview').onclick=()=>playing?stopPreview():previewFrames(project.frames);$('stop-preview').onclick=()=>{stopPreview();window.GlyphNative?.stop?.()};
+function playOnHardware(frames,repeat=1){if(!hardware){notify('На компьютере работает только экранный предпросмотр');return}try{const capped=frames.slice(0,400).map(f=>({pixels:normalizeFrame(f.pixels),duration:clamp(f.duration||180,80,3000)}));window.GlyphNative.play?.(JSON.stringify({frames:capped,repeat:clamp(repeat,1,5)}));}catch(e){notify('Ошибка подключения к Nothing SDK: '+e.message)}}
+$('play-hardware').onclick=()=>playOnHardware(project.frames,2);
+$('new-project').onclick=()=>{if(!confirm('Создать новый проект? Текущий несохранённый рисунок будет заменён.'))return;project={id:null,title:'Новая анимация',frames:[defaultFrame()]};$('project-name').value=project.title;selected=0;refreshEditor()};
+$('save-design').onclick=()=>{const title=$('project-name').value.trim()||'Без названия';const saved=normalizeDesign({...project,id:project.id||id(),title,source:project.source||'Мой проект',meta:project.meta});project.id=saved.id;project.title=saved.title;const idx=state.designs.findIndex(d=>d.id===saved.id);if(idx<0)state.designs.unshift(saved);else state.designs[idx]=saved;persist();notify('Сохранено в библиотеку');fillSelects();};
+function thumbnail(f,size=150){const c=document.createElement('canvas');paintMatrix(c,f?.pixels||blank(),size);return c}
+function renderLibrary(){const g=$('library-grid');g.innerHTML='';$('library-count').textContent=state.designs.length+' работ';if(!state.designs.length)g.innerHTML='<div class="empty">Пока пусто — создай первый глиф</div>';for(const d of state.designs){const card=document.createElement('div');card.className='design-card';card.appendChild(thumbnail(d.frames[0]));const label=document.createElement('strong');label.textContent=d.title;card.appendChild(label);const meta=document.createElement('small');meta.textContent=d.frames.length+' кадр. · '+(d.source||'Мой проект')+(d.meta?.author?' · @'+d.meta.author:'');card.appendChild(meta);if(d.meta?.url){const credit=document.createElement('a');credit.href=d.meta.url;credit.target='_blank';credit.rel='noopener noreferrer';credit.textContent='Автор / оригинал';credit.className='credit';card.appendChild(credit)}const actions=document.createElement('div');actions.className='card-actions';[['Редакт.',()=>setProject(d)],['▶',()=>{setProject(d);previewFrames(d.frames)}],['⇩',()=>downloadJSON({kind:'glyphforge-design',version:2,design:d},(d.title||'glyph')+'.gforge')],['Museum JSON',()=>downloadJSON(window.GlyphFormat.exportMuseum(d),(d.title||'glyph')+'.json')],['♪ Beat',()=>{goto('music');window.GlyphMusicUseDesign?.(d.id)}],['AOD',()=>{state.defaultToyId=d.id;persist();notify('Глиф выбран для AOD');if(hardware)window.GlyphNative.openToyManager?.()}],['✕',()=>{if(!confirm('Удалить '+d.title+'?'))return;state.designs=state.designs.filter(x=>x.id!==d.id);persist();renderLibrary();fillSelects()}]].forEach(([caption,cb])=>{const b=document.createElement('button');b.className='outline';b.textContent=caption;b.onclick=cb;actions.appendChild(b)});card.appendChild(actions);g.appendChild(card)}}
+function saveBlob(blob,name){if(window.GlyphNative?.saveBase64){blob.arrayBuffer().then(buffer=>{const bytes=new Uint8Array(buffer);if(bytes.byteLength>15_000_000)return notify('Файл экспорта слишком большой');let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));window.GlyphNative.saveBase64(btoa(binary),name,blob.type||'application/octet-stream')}).catch(e=>notify(e.message));return}const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name.replace(/[\\/:*?"<>|]/g,'_');a.click();setTimeout(()=>URL.revokeObjectURL(u),5000)}
+function downloadJSON(obj,name){saveBlob(new Blob([JSON.stringify(obj)],{type:'application/json'}),name.replace(/[\\/:*?"<>|]/g,'_'))}
+$('export-png').onclick=()=>{
+ const c=document.createElement('canvas');c.width=13;c.height=13;
+ const g=c.getContext('2d');const image=g.createImageData(13,13);
+ for(let i=0;i<169;i++){const v=MASK[i]?(frame().pixels[i]||0):0;image.data[i*4]=v;image.data[i*4+1]=v;image.data[i*4+2]=v;image.data[i*4+3]=255;}
+ g.putImageData(image,0,0);c.toBlob(blob=>blob?saveBlob(blob,($('project-name').value||'glyph')+'.png'):notify('PNG недоступен'),'image/png');
+};
+$('export-gif').onclick=()=>{try{const b=window.GlyphGIFExport(project.frames);saveBlob(b,($('project-name').value||'glyph')+'.gif')}catch(e){notify('Ошибка GIF: '+e.message)}};
+$('export-all').onclick=()=>downloadJSON({kind:'glyphforge-library',version:1,designs:state.designs,scenes:state.scenes,rules:state.rules,musicProfiles:state.musicProfiles||[]},'glyphforge-library.gforge');
+$('import-json').onclick=()=>$('file-json').click();
+async function importLibraryFile(f){if(!f)return;try{
+ if(!/\.(json|gforge)$/i.test(f.name)){await importMedia(f,true);return}
+ if(f.size>25e6)throw Error('JSON больше 25 МБ');const o=JSON.parse(await f.text());let count=0;
+ if(o.kind==='glyphforge-library'){
+   const remap={};for(const d of (o.designs||[])){const n=normalizeDesign(d);if(n){const old=n.id;n.id=id();remap[old]=n.id;state.designs.unshift(n);count++}}
+   for(const sc of (o.scenes||[]).filter(x=>Array.isArray(x.steps)).slice(0,500)){
+      state.scenes.push({...sc,id:id(),steps:sc.steps.map(st=>({...st,assetId:remap[st.assetId]||st.assetId}))});}
+   for(const profile of (o.musicProfiles||[]).filter(x=>x&&typeof x==='object').slice(0,500)){
+      if(!Array.isArray(state.musicProfiles))state.musicProfiles=[];
+      state.musicProfiles.push({...profile,id:id(),designId:remap[profile.designId]||profile.designId});
+   }
+   // Rules are not automatically activated on import: they may monitor sensitive notifications.
+ }else{
+   const n=normalizeDesign(o);if(!n)throw Error('Неизвестный формат JSON. Поддерживается Glyph Museum v4/v1 и .gforge');n.id=id();state.designs.unshift(n);count=1;
+ }
+ persist();fillSelects();renderLibrary();notify('В библиотеку добавлено: '+count);
+ }catch(e){notify('Ошибка импорта: '+e.message);console.error(e)}}
+$('file-json').onchange=async e=>{await importLibraryFile(e.target.files?.[0]);e.target.value=''};
+
+function external(url){if(hardware){window.GlyphNative.openCommunity(url)}else window.open(url,'_blank','noopener,noreferrer')}
+$('community-museum').onclick=()=>external('https://app.glyphmuseum.com/');$('community-playground').onclick=()=>external('https://playground.nothing.tech/toys?device=phone_4a_pro');
+function fillSelects(){const opts=state.designs.map(d=>`<option value="d:${text(d.id)}">${text(d.title)} (${d.frames.length})</option>`);const scenes=state.scenes.map(s=>`<option value="s:${text(s.id)}">Сценарий: ${text(s.name)}</option>`);let old=$('rule-target').value;$('rule-target').innerHTML=opts.join('')+scenes.join('');if([...$('rule-target').options].some(x=>x.value===old))$('rule-target').value=old;let oldRing=$('ring-design').value;$('ring-design').innerHTML=state.designs.map(d=>`<option value="${text(d.id)}">${text(d.title)}</option>`).join('');if(state.designs.some(d=>d.id===oldRing))$('ring-design').value=oldRing;$$('.step-select').forEach(s=>{const old=s.value;s.innerHTML=state.designs.map(d=>`<option value="${text(d.id)}">${text(d.title)}</option>`).join('');if(state.designs.some(d=>d.id===old))s.value=old})}
+function resolveFrames(target){const [type,targetId]=String(target).split(':');if(type==='d')return clone(state.designs.find(x=>x.id===targetId)?.frames||[]);if(type==='s'){const scene=state.scenes.find(s=>s.id===targetId);return buildSceneFrames(scene)}return []}
+function buildSceneFrames(scene){if(!scene||!Array.isArray(scene.steps))return[];let result=[];for(let step of scene.steps.slice(0,35)){const frames=state.designs.find(d=>d.id===step.assetId)?.frames||[];for(let i=0;i<clamp(+step.repeat||1,1,5);i++)for(const f of frames){if(result.length>=400)break;result.push(clone(f))}if((+step.pause||0)>0)result.push(defaultFrame(blank(),clamp(+step.pause||0,60,3000)))}return result.slice(0,400)}
+const eventNames={notification:'Уведомление',call:'Входящий звонок',charging:'Зарядка подключена',charge_removed:'Зарядка отключена',battery_low:'Низкий заряд',battery_full:'Заряд 100%',time:'По времени',screen_on:'Экран включён',screen_off:'Экран выключен',headphones:'Наушники подключены',shake:'Встряхивание',external:'Внешняя команда'};
+$('add-rule').onclick=()=>{
+ const target=$('rule-target').value;if(!target)return notify('Сначала создай глиф');
+ const r={id:id(),enabled:true,event:$('rule-event').value,target,app:($('rule-package').value.trim()||'*'),keyword:$('rule-keyword').value.trim(),repeat:+$('rule-repeat').value||1,time:$('rule-time').value,from:$('rule-start').value,to:$('rule-end').value,charge:$('rule-charge').value,
+  minBattery:$('rule-min-battery').value===''?null:clamp(+$('rule-min-battery').value,0,100),maxBattery:$('rule-max-battery').value===''?null:clamp(+$('rule-max-battery').value,0,100),days:[...document.querySelectorAll('.day-tick:checked')].map(e=>+e.value),
+  screen:$('rule-screen').value,face:$('rule-face').value,wifi:$('rule-wifi').value,headphones:$('rule-headphones').value,dnd:$('rule-dnd').value,
+  cooldown:clamp(+$('rule-cooldown').value||0,0,3600),priority:clamp(+$('rule-priority').value||0,0,100),brightness:clamp(+$('rule-brightness').value||100,1,100)};
+ state.rules.push(r);persist();renderRules();notify('Правило сохранено');
+};
+function renderRules(){const list=$('rules-list');list.innerHTML='';$('rules-count').textContent=state.rules.length+' правил';if(!state.rules.length)list.innerHTML='<div class="empty">Нет правил. Добавь событие и глиф выше.</div>';
+ for(const r of [...state.rules].sort((a,b)=>(b.priority||0)-(a.priority||0))){
+ const item=document.createElement('div');item.className='rule-item';let targetName=r.target?.startsWith('s:')?state.scenes.find(s=>s.id===r.target.slice(2))?.name:state.designs.find(d=>d.id===r.target?.slice(2))?.title;
+ item.innerHTML=`<div><strong>${text(eventNames[r.event]||r.event)} → ${text(targetName||'Удалённый глиф')}</strong><small>${text(r.app||'*')} ${r.keyword?'· «'+text(r.keyword)+'»':''} · ${r.repeat} повт. · приоритет ${r.priority||0} · ${r.cooldown||0} с пауза</small></div>`;
+ const actions=document.createElement('div');actions.className='line';const toggle=document.createElement('button');toggle.className='pill';toggle.textContent=r.enabled?'ВКЛ':'ВЫКЛ';toggle.onclick=()=>{r.enabled=!r.enabled;persist();renderRules()};
+ const test=document.createElement('button');test.className='outline small';test.textContent='▶ Тест';test.onclick=()=>{const fr=resolveFrames(r.target).map(f=>({...f,pixels:f.pixels.map(x=>Math.round(x*(r.brightness||100)/100))}));if(fr.length){goto('studio');previewFrames(fr);playOnHardware(fr,r.repeat)}};
+ const del=document.createElement('button');del.className='outline small danger';del.textContent='✕';del.onclick=()=>{state.rules=state.rules.filter(x=>x.id!==r.id);persist();renderRules()};actions.append(toggle,test,del);item.appendChild(actions);list.appendChild(item)
+ }}
+$('notification-access').onclick=()=>hardware?window.GlyphNative.openNotificationSettings():notify('Разрешение запрашивается только в Android');
+$('phone-access').onclick=()=>hardware?window.GlyphNative.requestCallPermission():notify('Разрешение запрашивается только в Android');
+$('automation-key').onclick=()=>{if(!hardware)return notify('Tasker доступен только в Android');const key=window.GlyphNative.getAutomationKey?.();if(!key)return notify('Не удалось получить ключ');window.prompt('Отправь Broadcast action com.example.glyphforge.RUN в package com.example.glyphforge с extra key (секрет). Не сообщай ключ посторонним:',key)};
+function renderSteps(){const out=$('steps-list');out.innerHTML='';sceneSteps.forEach((s,i)=>{const item=document.createElement('div');item.className='step-item';item.innerHTML=`<span class="pill">${i+1}</span><select class="step-select" aria-label="Глиф для шага ${i+1}">${state.designs.map(d=>`<option value="${text(d.id)}" ${s.assetId===d.id?'selected':''}>${text(d.title)}</option>`).join('')}</select><input class="step-repeat" type="number" min="1" max="5" value="${clamp(+s.repeat||1,1,5)}" aria-label="Число повторов" title="Число повторов"><input class="step-pause" type="number" min="0" max="3000" step="100" value="${+s.pause||0}" aria-label="Пауза, мс" title="Пауза, мс"><button class="close" title="Удалить шаг">×</button>`;item.querySelector('select').onchange=e=>{s.assetId=e.target.value};item.querySelector('.step-repeat').onchange=e=>{s.repeat=clamp(+e.target.value,1,5)};item.querySelector('.step-pause').onchange=e=>{s.pause=clamp(+e.target.value,0,3000)};item.querySelector('.close').onclick=()=>{sceneSteps.splice(i,1);renderSteps()};out.appendChild(item)})}
+$('add-step').onclick=()=>{sceneSteps.push({assetId:state.designs[0]?.id||'',pause:300,repeat:1});renderSteps()};
+function currentScene(){return {id:id(),name:$('scene-name').value.trim()||'Без названия',steps:sceneSteps.map(s=>({...s,assetId:s.assetId||state.designs[0]?.id||''}))}}
+$('save-scene').onclick=()=>{if(!sceneSteps.length)return notify('Добавь хотя бы один шаг');state.scenes.push(currentScene());persist();renderScenes();fillSelects();notify('Сценарий сохранён')};
+$('preview-scene').onclick=()=>{const frames=buildSceneFrames(currentScene());if(!frames.length)return notify('В сценарии нет глифов');goto('studio');previewFrames(frames);playOnHardware(frames,1)};
+function renderScenes(){let out=$('scenes-list');out.innerHTML='';$('scenes-count').textContent=state.scenes.length;if(!state.scenes.length)out.innerHTML='<div class="empty">Создай последовательность из нескольких глифов</div>';for(const s of state.scenes){const row=document.createElement('div');row.className='scene-item';row.innerHTML='<div><strong>'+text(s.name)+'</strong><small>'+s.steps.length+' шагов</small></div>';const actions=document.createElement('div');actions.className='line';const play=document.createElement('button');play.className='outline small';play.textContent='▶ Пуск';play.onclick=()=>{const frames=buildSceneFrames(s);if(frames.length){goto('studio');previewFrames(frames);playOnHardware(frames,1)}};const edit=document.createElement('button');edit.className='outline small';edit.textContent='Изменить';edit.onclick=()=>{$('scene-name').value=s.name;sceneSteps=clone(s.steps);state.scenes=state.scenes.filter(x=>x.id!==s.id);persist();goto('scenes');renderSteps();renderScenes()};const del=document.createElement('button');del.className='outline small danger';del.textContent='✕';del.onclick=()=>{state.scenes=state.scenes.filter(x=>x.id!==s.id);persist();renderScenes();fillSelects()};actions.append(play,edit,del);row.appendChild(actions);out.appendChild(row)}}
+function imagePixels(image,contrast=1.4,invert=false,bw=false){return window.GlyphFormat.rasterToPixels(image,{mode:$('import-layout').value,contrast,invert,bw})}
+
+function mediaOptions(){return {limit:clamp(+$('import-frames').value||32,1,96),delay:clamp(+$('import-delay').value||160,80,2000),contrast:+$('import-contrast').value||1.4,invert:$('import-invert').checked,bw:$('import-bw').checked}}
+async function bitmapFromFile(file){return new Promise((resolve,reject)=>{const u=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(u);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(u);reject(Error('Не удалось прочитать изображение'))};img.src=u})}
+async function decodeAnimated(file,opts){if(!window.ImageDecoder)throw Error('ImageDecoder недоступен в этом браузере');const buffer=new Uint8Array(await file.arrayBuffer());let mime=file.type||'image/gif';const decoder=new ImageDecoder({data:buffer,type:mime});await decoder.tracks.ready;const length=decoder.tracks.selectedTrack?.frameCount||1;const count=Math.min(length,opts.limit);let frames=[];let previous=0;for(let i=0;i<count;i++){const decoded=await decoder.decode({frameIndex:Math.floor(i*length/count),completeFramesOnly:true});let b=decoded.image;let ms=(b.duration||opts.delay*1000)/1000;frames.push(defaultFrame(imagePixels(b,opts.contrast,opts.invert,opts.bw),clamp(ms,80,2000)));b.close?.()}decoder.close();return frames}
+async function decodeVideo(file,opts){const url=URL.createObjectURL(file),vid=document.createElement('video');vid.muted=true;vid.preload='auto';vid.playsInline=true;vid.src=url;try{await new Promise((ok,bad)=>{vid.onloadedmetadata=ok;vid.onerror=()=>bad(Error('Браузер не поддерживает это видео'));setTimeout(()=>bad(Error('Видео не открылось (таймаут)')),12000)});const duration=Math.min(isFinite(vid.duration)?vid.duration:0,15);if(duration<=0)throw Error('Неизвестная длительность видео');const count=Math.min(opts.limit,Math.max(1,Math.ceil(duration*1000/opts.delay)));let frames=[];for(let i=0;i<count;i++){const target=Math.min(duration-.005,i*duration/count);await new Promise((ok,bad)=>{vid.onseeked=ok;vid.onerror=()=>bad(Error('Ошибка декодирования'));vid.currentTime=Math.max(0,target);setTimeout(ok,700)});frames.push(defaultFrame(imagePixels(vid,opts.contrast,opts.invert,opts.bw),opts.delay))}return frames}finally{vid.pause();vid.removeAttribute('src');vid.load();URL.revokeObjectURL(url)}}
+async function importMedia(file,saveToLibrary=false){if(!file)return;const options=mediaOptions();$('import-result').textContent='Обрабатываю '+file.name+' локально…';$('choose-media').disabled=true;try{if(file.size>80e6)throw Error('Файл больше 80 МБ — сначала обрежь видео');let frames=[];if(file.type.startsWith('video/'))frames=await decodeVideo(file,options);else if(file.type==='image/gif'){try{frames=window.GlyphGIF.decode(await file.arrayBuffer(),options.limit,(canvas,ms)=>defaultFrame(imagePixels(canvas,options.contrast,options.invert,options.bw),clamp(ms,80,2000)))}catch(e){console.error('GIF decoder:',e);throw Error('Не удалось декодировать GIF: '+e.message)}}else if(file.type==='image/webp'){try{frames=await decodeAnimated(file,options)}catch(e){const image=await bitmapFromFile(file);frames=[defaultFrame(imagePixels(image,options.contrast,options.invert,options.bw),options.delay)];notify('Для анимированного WEBP нужен браузер с ImageDecoder')}}else{const image=await bitmapFromFile(file);frames=[defaultFrame(imagePixels(image,options.contrast,options.invert,options.bw),options.delay)]}if(!frames.length)throw Error('Не удалось получить кадры');project={id:null,title:file.name.replace(/\.[^.]+$/,'').slice(0,80),frames,source:'Импорт медиа'};if(saveToLibrary){const imported=normalizeDesign({...project,id:id()});state.designs.unshift(imported);persist();fillSelects();renderLibrary();}$('project-name').value=project.title;selected=0;refreshEditor();$('import-result').textContent='Готово: '+frames.length+' кадров из «'+file.name+'». Сохрани результат в Студии.';goto('studio');notify('Импортировано '+frames.length+' кадров')}catch(e){$('import-result').textContent='Ошибка: '+e.message;notify('Импорт не удался')}finally{$('choose-media').disabled=false;$('file-media').value=''}}
+$('choose-media').onclick=()=>$('file-media').click();$('file-media').onchange=e=>importMedia(e.target.files?.[0]);const drop=$('drop-media');for(let n of ['dragenter','dragover'])drop.addEventListener(n,e=>{e.preventDefault();drop.classList.add('drag')});for(let n of ['dragleave','drop'])drop.addEventListener(n,e=>{e.preventDefault();drop.classList.remove('drag')});drop.addEventListener('drop',e=>importMedia(e.dataTransfer.files?.[0]));
+$('ring-file').onchange=e=>{const f=e.target.files?.[0];if(!f)return;if(ringUrl)URL.revokeObjectURL(ringUrl);ringBlob=f;ringUrl=URL.createObjectURL(f);$('ring-audio').src=ringUrl;$('ring-audio-info').textContent=f.name+' · '+(f.size/1024/1024).toFixed(1)+' МБ';};
+$('ring-preview').onclick=()=>{const d=state.designs.find(d=>d.id===$('ring-design').value);if(!d)return notify('Выбери анимацию');goto('studio');previewFrames(d.frames);if(ringBlob){$('ring-audio').currentTime=0;$('ring-audio').play().catch(()=>notify('Разреши воспроизведение звука'))}playOnHardware(d.frames,3)};
+$('ring-stop').onclick=()=>{stopPreview();$('ring-audio').pause();window.GlyphNative?.stop?.()};$('ring-audio').onended=()=>stopPreview();
+$('export-ringtone').onclick=()=>ringBlob?saveBlob(ringBlob,'GlyphForge_'+ringBlob.name):notify('Выбери аудиофайл');
+$('system-ringtone').onclick=()=>hardware?window.GlyphNative.openRingtoneSettings():notify('Системные настройки доступны только на Android');
+$('help-btn').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();
+// Initial render and native state refresh.
+fillSelects();renderSteps();refreshEditor();renderLibrary();renderRules();renderScenes();
+window.addEventListener('beforeunload',()=>{stopPreview(false);if(ringUrl)URL.revokeObjectURL(ringUrl)});
+// Minimal test hooks in browser console. No network calls, no telemetry.
+window.GlyphForgeTest={importLibraryFile,format:window.GlyphFormat,maskCount:()=>MASK.filter(Boolean).length,normalizeFrame,normalizeDesign,buildSceneFrames,getState:()=>clone(state),demo:()=>{setProject(state.designs[0])}};
+window.GlyphMusicAdapter={getState:()=>state,persist,notify,goto,draw:(canvas,pixels)=>paintMatrix(canvas,pixels,canvas.width),saveJson:downloadJSON,openCommunity:external};
+})();
+
+</script><script>
+/* GlyphForge Music Reactive: local presets, portable files, Web Audio preview. No cloud, no recording. */
+(()=>{'use strict';
+const $=id=>document.getElementById(id), adapter=window.GlyphMusicAdapter;
+if(!adapter)return;
+const state=adapter.getState(),clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),MASK=Array.from({length:169},(_,i)=>{const x=i%13-6,y=Math.floor(i/13)-6;return x*x+y*y<=41;});
+const MODES={bars:'Эквалайзер',ring:'Круговой удар',wave:'Волна',spark:'Искры',orbit:'Орбита',art:'Свой глиф'};
+const ICONS={bars:'▥',ring:'◎',wave:'〰',spark:'✦',orbit:'◉',art:'▦'};
+const TEMPLATES=[
+ {id:'beat-bars',title:'Bass Bars',mode:'bars',description:'Столбцы реагируют на спектр',sensitivity:1.6,smoothing:.55,brightness:.95,tags:'эквалайзер бас частоты динамика'},
+ {id:'beat-night',title:'Night Bass',mode:'bars',description:'Плавный эквалайзер на низкой яркости',sensitivity:2.2,smoothing:.82,brightness:.50,tags:'ночь плавный бас'},
+ {id:'beat-pulse',title:'Bass Pulse',mode:'ring',description:'Кольцо увеличивается на удар',sensitivity:2.0,smoothing:.30,brightness:1,tags:'круг удар бас'},
+ {id:'beat-ripple',title:'Ripple',mode:'ring',description:'Световое кольцо на пиках',sensitivity:3.0,smoothing:.48,brightness:.85,tags:'волны круг бас'},
+ {id:'beat-wave',title:'Waveform',mode:'wave',description:'Волна колеблется с музыкой',sensitivity:2.1,smoothing:.38,brightness:1,tags:'волна частоты'},
+ {id:'beat-spark',title:'Strobe Sparks',mode:'spark',description:'Вспышки на сильных ударах',sensitivity:2.6,smoothing:.15,brightness:.90,tags:'вспышки искры бит'},
+ {id:'beat-orbit',title:'Orbit',mode:'orbit',description:'Вращение с усилением на басе',sensitivity:1.7,smoothing:.60,brightness:.85,tags:'вращение орбита бас'},
+ {id:'beat-custom',title:'Мой рисунок · Beat',mode:'art',description:'Мой глиф пульсирует и меняет кадры в такт',sensitivity:1.8,smoothing:.52,brightness:1,tags:'мой рисунок анимация гиф'}
+];
+if(!Array.isArray(state.musicProfiles))state.musicProfiles=[];
+const clean=p=>({
+ id:String(p.id||('music-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6))).slice(0,80),
+ title:String(p.title||'Новый эффект').slice(0,80),
+ mode:Object.hasOwn(MODES,p.mode)?p.mode:'bars',
+ description:String(p.description||'Собственный музыкальный глиф').slice(0,220),
+ designId:String(p.designId||'').slice(0,120),
+ sensitivity:clamp(Number(p.sensitivity)||1.6,.5,4.5),
+ smoothing:clamp(Number.isFinite(Number(p.smoothing))?Number(p.smoothing):.55,0,.94),
+ brightness:clamp(Number(p.brightness)||.95,.1,1),
+ tags:String(p.tags||'').slice(0,150)
+});
+let current=clean(TEMPLATES[0]),audioCtx=null,analyser=null,freq=null,timeSamples=null,playerSource=null,audioURL=null,animationHandle=null,lastDraw=0,demo=false,smoothed=Array(8).fill(0),avgBass=.05,lastBeat=0,artIndex=0;
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ms=()=>performance.now()/1000;
+function getDesign(){return state.designs.find(d=>d.id===current.designId)||state.designs[0]||null}
+function fillDesigns(){const sel=$('music-design'),old=current.designId||sel.value;sel.replaceChildren();for(const d of state.designs){const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.title;sel.appendChild(opt)}if(state.designs.some(d=>d.id===old))sel.value=old;current.designId=sel.value||'';}
+function readForm(){return clean({...current,title:$('music-title').value,mode:$('music-mode').value,designId:$('music-design').value,sensitivity:Number($('music-sens').value)/100,smoothing:Number($('music-smooth').value)/100,brightness:Number($('music-bright').value)/100})}
+function formFrom(p){current=clean(p);fillDesigns();$('music-title').value=current.title;$('music-mode').value=current.mode;$('music-design').value=current.designId&&state.designs.some(d=>d.id===current.designId)?current.designId:$('music-design').value;
+ $('music-sens').value=Math.round(current.sensitivity*100);$('music-smooth').value=Math.round(current.smoothing*100);$('music-bright').value=Math.round(current.brightness*100);labels();adapter.notify('Музыкальный эффект выбран: '+current.title)}
+function labels(){for(const [a,b] of [['sens','music-sens-value'],['smooth','music-smooth-value'],['bright','music-bright-value']])$(b).textContent=$('music-'+a).value+'%';}
+['sens','smooth','bright'].forEach(s=>{$('music-'+s).addEventListener('input',()=>{labels();current=readForm();});});
+$('music-mode').onchange=()=>{current=readForm();};$('music-design').onchange=()=>{current=readForm();};
+function showCatalog(){const query=$('music-search').value.trim().toLocaleLowerCase('ru'),category=$('music-category').value,items=[...(category!=='user'?TEMPLATES.map(p=>({...p,source:'builtin'})):[]),...(category!=='builtin'?state.musicProfiles.map(p=>({...p,source:'user'})):[])];
+ const filtered=items.filter(p=>(p.title+' '+p.description+' '+p.tags+' '+MODES[p.mode]).toLocaleLowerCase('ru').includes(query));$('music-count').textContent=filtered.length+' эффектов';const host=$('music-presets');host.replaceChildren();
+ if(!filtered.length){host.innerHTML='<div class="empty">Не найдено. Измени запрос или сохрани свой эффект.</div>';return;}
+ for(const p of filtered){const c=document.createElement('div');c.className='design-card music-tile';c.innerHTML=`<div class="music-cover">${ICONS[p.mode]||'♪'}</div><strong>${escape(p.title)}</strong><small>${p.source==='user'?'Моя работа · ':'Шаблон · '}${escape(MODES[p.mode])}</small><span class="hint">${escape(p.description)}</span>`;
+ const actions=document.createElement('div');actions.className='music-actions';const choose=document.createElement('button');choose.className='primary';choose.textContent='Выбрать';choose.onclick=()=>formFrom(p);actions.appendChild(choose);
+ if(p.source==='user'){const remove=document.createElement('button');remove.className='outline';remove.textContent='Удалить';remove.onclick=()=>{if(!confirm('Удалить этот эффект из своей библиотеки?'))return;state.musicProfiles=state.musicProfiles.filter(o=>o.id!==p.id);adapter.persist();showCatalog()};actions.appendChild(remove);}
+ c.appendChild(actions);host.appendChild(c);
+ }
+}
+$('music-search').oninput=showCatalog;$('music-category').onchange=showCatalog;
+$('music-save').onclick=()=>{let p=readForm();p.id='music-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);state.musicProfiles.push(p);adapter.persist();showCatalog();adapter.notify('Музыкальный глиф сохранён в библиотеку');};
+$('music-export').onclick=()=>{const p=readForm();adapter.saveJson({kind:'glyphforge-music-profile',version:1,profile:p},p.title.replace(/[^a-zа-я0-9 -]/gi,'_')+'.gforgebeat');};
+$('music-import').onclick=()=>$('music-import-file').click();
+$('music-import-file').onchange=async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{if(file.size>100000)throw new Error('Файл слишком большой');const obj=JSON.parse(await file.text());if(obj.kind!=='glyphforge-music-profile'||!obj.profile||typeof obj.profile!=='object')throw new Error('Это не профиль GlyphForge Music');const imported=clean(obj.profile);imported.id='music-'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);state.musicProfiles.push(imported);adapter.persist();formFrom(imported);showCatalog();adapter.notify('Пресет импортирован');}catch(err){adapter.notify('Ошибка импорта пресета: '+err.message);}};
+$('music-community-museum').onclick=()=>adapter.openCommunity('https://app.glyphmuseum.com/');
+$('music-community-playground').onclick=()=>adapter.openCommunity('https://playground.nothing.tech/toys?device=phone_4a_pro');
+$('music-open-library').onclick=()=>adapter.goto('library');
+const canvas=$('music-preview'),g=canvas.getContext('2d');
+function render(levels,beat,elapsed){const p=readForm(),v=clamp(levels.rms*p.sensitivity,0,1),bass=clamp((levels.bands[0]+levels.bands[1])*.55*p.sensitivity,0,1),out=Array(169).fill(0);
+ const d=getDesign(),frames=d?.frames||[],art=frames.length?frames[Math.floor((elapsed*1.3+beat*4)%frames.length)].pixels:null;
+ for(let y=0;y<13;y++)for(let x=0;x<13;x++){
+ const i=y*13+x;if(!MASK[i])continue;
+ const dx=x-6,dy=y-6,dist=Math.hypot(dx,dy),angle=Math.atan2(dy,dx);let value=0;
+ if(p.mode==='bars'){const band=Math.min(7,Math.floor(x*8/13));const height=1+clamp(levels.bands[band]*p.sensitivity*2.6,0,1)*11;if(12-y<=height&&levels.bands[band]>.024)value=.28+levels.bands[band]*.85;}
+ else if(p.mode==='ring'){const radius=2+v*4.3+beat*.8;value=Math.abs(dist-radius)<.8?.35+v*.5+beat*.5:0;}
+ else if(p.mode==='wave'){const target=6+Math.sin(x*.9+elapsed*3)*(.6+levels.bands[2]*p.sensitivity*3);value=Math.abs(y-target)<.65?.25+v*.8:0;}
+ else if(p.mode==='spark'){const n=Math.sin((x*9+y*13)*13.17+Math.floor(elapsed*9))*.5+.5;value=(bass+beat>.32&&n>.72)?clamp((bass+beat)*.85,0,1):0;}
+ else if(p.mode==='orbit'){const theta=Math.abs(Math.atan2(Math.sin(angle-elapsed*2.7-v*4),Math.cos(angle-elapsed*2.7-v*4)));value=(Math.abs(dist-4.6)<1.05&&theta<.45)?(.3+v*.7+beat*.5):0;}
+ else if(p.mode==='art'){value=(art?.[i]||0)/255*(.1+v*.9+beat*.3);}
+ out[i]=Math.round(255*clamp(value*p.brightness,0,1));
+ }
+ adapter.draw(canvas,out);$('music-meter-fill').style.width=Math.round(v*100)+'%';
+}
+let prevTime=0;
+async function initAudio(){if(!audioCtx){const C=window.AudioContext||window.webkitAudioContext;if(!C)throw Error('Web Audio API недоступен');audioCtx=new C();analyser=audioCtx.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.24;playerSource=audioCtx.createMediaElementSource($('music-audio-player'));playerSource.connect(analyser);analyser.connect(audioCtx.destination);freq=new Uint8Array(analyser.frequencyBinCount);timeSamples=new Uint8Array(analyser.fftSize);}
+ await audioCtx.resume();}
+function animate(now){animationHandle=requestAnimationFrame(animate);if(now-lastDraw<60)return;lastDraw=now;
+ const b=Array(8).fill(0);let energy=0, rms=0;const seconds=now/1000;
+ if(!demo&&analyser){analyser.getByteFrequencyData(freq);analyser.getByteTimeDomainData(timeSamples);for(const x of timeSamples){const v=(x-128)/128;rms+=v*v;}rms=clamp(Math.sqrt(rms/timeSamples.length)*3,0,1);
+  for(let i=1;i<freq.length;i++){const band=Math.min(7,Math.floor(Math.log1p(i)/Math.log1p(freq.length-1)*8));b[band]=Math.max(b[band],freq[i]/255);}
+ }else if(demo){rms=clamp(.28+.32*Math.pow(Math.max(0,Math.sin(seconds*8)),4)+.16*Math.sin(seconds*3),0,1);
+  for(let i=0;i<8;i++)b[i]=clamp(rms*(.6+.4*Math.sin(seconds*2+i*.85)),0,1);
+ }else return;
+ const p=readForm();for(let i=0;i<8;i++)smoothed[i]=smoothed[i]*p.smoothing+b[i]*(1-p.smoothing);
+ const bass=(smoothed[0]+smoothed[1])*.5,delta=bass-avgBass;avgBass=.94*avgBass+.06*bass;lastBeat*=.72;if(delta>.065&&bass>.11)lastBeat=.95;
+ const l={rms,bands:smoothed};render(l,lastBeat,seconds);
+}
+function stopPreview(){if(animationHandle!==null)cancelAnimationFrame(animationHandle);animationHandle=null;demo=false;$('music-audio-player').pause();$('music-preview-state').textContent='ОЖИДАНИЕ';$('music-meter-fill').style.width='0%';}
+$('music-audio-file').onchange=e=>{const f=e.target.files?.[0];if(!f)return;stopPreview();if(audioURL)URL.revokeObjectURL(audioURL);audioURL=URL.createObjectURL(f);$('music-audio-player').src=audioURL;adapter.notify('Загружено: '+f.name+' — данные остаются на устройстве');};
+$('music-audio-player').onplay=async()=>{if(animationHandle!==null)cancelAnimationFrame(animationHandle);animationHandle=null;demo=false;try{await initAudio();$('music-preview-state').textContent='АУДИО LIVE';animate(performance.now());}catch(e){adapter.notify('Аудиопредпросмотр: '+e.message)}};
+$('music-audio-player').onpause=()=>{if(!demo){if(animationHandle!==null)cancelAnimationFrame(animationHandle);animationHandle=null;$('music-preview-state').textContent='ПАУЗА';}};
+$('music-audio-player').onended=()=>stopPreview();
+$('music-demo').onclick=()=>{stopPreview();demo=true;$('music-preview-state').textContent='ДЕМО · СИНТЕТИЧЕСКИЙ РИТМ';animate(performance.now());};
+$('music-preview-stop').onclick=stopPreview;
+$('music-native-start').onclick=()=>{if(!window.GlyphNative){adapter.notify('Запуск системной музыки доступен в Android-приложении');return;}stopPreview();try{window.GlyphNative.startMusic(JSON.stringify(readForm()),$('music-source').value);$('music-native-status').textContent='Запрос разрешений и запуск…';}catch(e){adapter.notify(e.message)}};
+$('music-native-stop').onclick=()=>{if(window.GlyphNative){window.GlyphNative.stopMusic();$('music-native-status').textContent='Остановка…'}else adapter.notify('Android-приложение не подключено');};
+function refresh(){fillDesigns();showCatalog();try{if(window.GlyphNative)$('music-native-status').textContent=window.GlyphNative.musicStatus();else $('music-native-status').textContent='Браузер: режим анализа системного звука доступен после установки APK';}catch(e){}}
+window.GlyphMusicRefresh=refresh;
+window.GlyphMusicUseDesign=designId=>{formFrom({id:'',title:'Музыкальный глиф · '+(state.designs.find(d=>d.id===designId)?.title||'свой рисунок'),mode:'art',designId,sensitivity:1.8,smoothing:.45,brightness:1});};
+formFrom({...TEMPLATES[0],designId:state.designs[0]?.id||''});refresh();render({bands:Array(8).fill(0),rms:0},0,0);
+window.addEventListener('beforeunload',()=>{if(audioURL)URL.revokeObjectURL(audioURL);if(audioCtx)audioCtx.close()});
+window.GlyphForgeMusicTest={templates:TEMPLATES,readForm,render,modes:MODES};
+})();
+
+</script></body></html>

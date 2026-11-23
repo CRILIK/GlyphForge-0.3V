@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="com.nothing.ketchum.permission.ENABLE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <queries><package android:name="com.nothing.thirdparty" /></queries>
+    <application android:allowBackup="false" android:label="GlyphForge" android:icon="@drawable/ic_launcher" android:theme="@android:style/Theme.Material.NoActionBar" android:usesCleartextTraffic="false" android:supportsRtl="true">
+        <service android:name=".MusicVisualizerService" android:exported="false" android:foregroundServiceType="microphone|mediaProjection" />
+        <activity android:name=".CommunityActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize">
+            <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+        </activity>
+        <service android:name=".GlyphNotificationListener" android:exported="true" android:label="GlyphForge уведомления" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
+        </service>
+        <receiver android:name=".AutomationReceiver" android:exported="true">
+            <intent-filter><action android:name="com.example.glyphforge.RUN" /></intent-filter>
+        </receiver>
+        <receiver android:name=".GlyphEventReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".GlyphToyService" android:exported="true">
+            <intent-filter><action android:name="com.nothing.glyph.TOY"/></intent-filter>
+            <meta-data android:name="com.nothing.glyph.toy.name" android:resource="@string/toy_name"/>
+            <meta-data android:name="com.nothing.glyph.toy.image" android:resource="@drawable/toy_preview"/>
+            <meta-data android:name="com.nothing.glyph.toy.aod_support" android:value="1"/>
+            <meta-data android:name="com.nothing.glyph.toy.summary" android:resource="@string/toy_summary"/>
+        </service>
+    </application>
+</manifest>
