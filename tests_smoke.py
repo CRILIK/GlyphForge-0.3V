@@ -105,6 +105,7 @@ def test_import_museum_json_author(page):
 def test_community_import_gforge(page):
     page.locator('.nav[data-tab="library"]').click()
     page.locator('#file-json').set_input_files(ROOT/'samples'/'Running-Kitten.gforge')
+    expect(page.locator('#library-grid .design-card')).to_have_count(4,timeout=7000)
     ds=page.evaluate('GlyphForgeTest.getState().designs')
     assert len(ds)>=4
     assert len(ds[0]['frames'])==7
