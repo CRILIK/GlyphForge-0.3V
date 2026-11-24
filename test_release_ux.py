@@ -39,7 +39,7 @@ def test_android_update_banner_and_diagnostics():
     assert 'update-banner' in diag
     assert 'GlyphForge_Diagnostics.json' in diag
     assert 'Nothing SDK загружен' in diag
-    assert "versionName '0.4.4'" in (ROOT/'app/build.gradle').read_text()
+    assert "versionName '0.4.5'" in (ROOT/'app/build.gradle').read_text()
 
 
 def test_release_signed_update_path():

@@ -329,3 +329,44 @@ def test_export_locked_until_full_diagnostics_finished(page):
     report=json.loads(page.evaluate('GlyphForgeDiagnostics.getReport()'))
     assert report['fullRun'] is True
     assert report['summary']['pending']==0
+
+
+@pytest.mark.parametrize('stop_id',['play-preview','stop-preview'])
+def test_playback_does_not_edit_pixels_or_frames(page,stop_id):
+    page.locator('#project-name').fill('Preview lock')
+    page.locator('#add-frame').click()
+    grid=page.locator('#grid')
+    grid.click(position={'x':260,'y':260})
+    before=page.evaluate('GlyphForgeTest.getProject()')
+    page.locator('#play-preview').click()
+    assert page.evaluate('GlyphForgeTest.isPlaying()')
+    assert grid.get_attribute('aria-disabled')=='true'
+    expect(page.locator('#preview-lock-status')).to_be_visible()
+    expect(page.locator('#clear-frame')).to_be_disabled()
+    expect(page.locator('#add-frame')).to_be_disabled()
+    expect(page.locator('#duration')).to_be_disabled()
+    grid.click(position={'x':300,'y':260},force=True)
+    box=grid.bounding_box()
+    page.mouse.move(box['x']+230,box['y']+260)
+    page.mouse.down()
+    page.mouse.move(box['x']+340,box['y']+260,steps=5)
+    page.mouse.up()
+    assert page.evaluate('GlyphForgeTest.getProject()')==before
+    page.locator('#'+stop_id).click()
+    assert not page.evaluate('GlyphForgeTest.isPlaying()')
+    expect(page.locator('#preview-lock-status')).to_be_hidden()
+    expect(page.locator('#clear-frame')).to_be_enabled()
+    grid.click(position={'x':300,'y':260})
+    assert page.evaluate('GlyphForgeTest.getProject()')!=before
+
+def test_library_preview_is_read_only_and_navigation_unlocks(page):
+    page.locator('.nav[data-tab="library"]').click()
+    page.locator('#library-grid .design-card').first.get_by_role('button',name='▶',exact=True).click()
+    assert page.evaluate('GlyphForgeTest.isPlaying()')
+    before=page.evaluate('GlyphForgeTest.getProject()')
+    page.locator('#grid').click(position={'x':260,'y':260},force=True)
+    assert page.evaluate('GlyphForgeTest.getProject()')==before
+    page.locator('.nav[data-tab="library"]').click()
+    assert not page.evaluate('GlyphForgeTest.isPlaying()')
+    page.locator('#library-grid .design-card').first.get_by_role('button',name='Редакт.',exact=True).click()
+    expect(page.locator('#clear-frame')).to_be_enabled()
