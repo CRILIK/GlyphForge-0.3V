@@ -308,3 +308,24 @@ def test_diagnostics_missing_permissions_not_success(page):
     assert report['summary']['blocked']==4
     assert all(t['pass'] is None for t in report['tests'] if t['status']=='blocked')
     assert report['appVersion']=='0.4.2'
+
+
+def test_all_eight_nav_buttons_fit_real_phone_viewport(page):
+    page.add_style_tag(content=(ASSETS/'style.css').read_text(encoding='utf-8'))
+    for width in [320,360,420]:
+        page.set_viewport_size({'width':width,'height':855})
+        assert page.evaluate("""() => [...document.querySelectorAll('.nav')].every(b=>{const r=b.getBoundingClientRect();return r.width>=32&&r.height>=32&&r.left>=-1&&r.top>=-1&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1})"""), width
+
+def test_export_locked_until_full_diagnostics_finished(page):
+    page.evaluate("""() => {window.GlyphNative={getDiagnostics:()=>JSON.stringify({mode:'android',appVersion:'0.4.4',sdkInstalled:true,savedLibraryValid:true,downloadsWritable:true,notificationAccess:false,audioPermission:true,callPermission:true,postNotificationPermission:true,checks:[]}),runFullDiagnostics:t=>{window.diagTestToken=t}}}""")
+    page.locator('.nav[data-tab="diagnostics"]').click()
+    page.locator('#run-diagnostics').click()
+    expect(page.locator('#export-diagnostics')).to_be_disabled()
+    expect(page.locator('#share-diagnostics')).to_be_disabled()
+    expect(page.locator('#diag-notification-help')).to_be_visible()
+    page.evaluate("""() => {for(const group of ['Подключение и передача Glyph SDK','Тестовое уведомление','Аудиовыход Visualizer','Сеть HTTPS и обновления'])window.GlyphDiagnosticResult(window.diagTestToken,group,JSON.stringify([{name:group,status:'untested',detail:'test'}]))}""")
+    expect(page.locator('#export-diagnostics')).to_be_enabled(timeout=12000)
+    expect(page.locator('#share-diagnostics')).to_be_enabled()
+    report=json.loads(page.evaluate('GlyphForgeDiagnostics.getReport()'))
+    assert report['fullRun'] is True
+    assert report['summary']['pending']==0

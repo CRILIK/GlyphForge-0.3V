@@ -216,6 +216,10 @@ public class MainActivity extends Activity {
             android.content.SharedPreferences prefs=getSharedPreferences(MusicVisualizerService.STATUS,MODE_PRIVATE);
             return (MusicVisualizerService.isRunning()?"RUNNING: ":"STOPPED: ")+prefs.getString("message","");
         }
+        @JavascriptInterface public void openAppSettings(){runOnUiThread(()->{
+            try{startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:"+getPackageName())));}
+            catch(Exception e){status("Открой системные настройки приложения GlyphForge");}
+        });}
         @JavascriptInterface public void openNotificationSettings(){runOnUiThread(()->{
             startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
         });}
