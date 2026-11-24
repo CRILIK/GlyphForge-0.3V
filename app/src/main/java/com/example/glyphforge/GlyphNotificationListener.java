@@ -20,7 +20,10 @@ public final class GlyphNotificationListener extends NotificationListenerService
     private boolean shakeActive;
     private long lastShake;
     private int lastLevel=-1;
-    private static GlyphNotificationListener active;
+    private static volatile GlyphNotificationListener active;
+    private static volatile long diagnosticSeen;
+    public static boolean diagnosticConnected(){return active!=null;}
+    public static long diagnosticSeen(){return diagnosticSeen;}
     private static volatile boolean faceDown=false,faceUp=false;
     public static boolean isFaceDown(){return faceDown;}
     public static boolean isFaceUp(){return faceUp;}
@@ -60,7 +63,8 @@ public final class GlyphNotificationListener extends NotificationListenerService
     }
     @Override public void onAccuracyChanged(Sensor sensor,int accuracy){}
     @Override public void onNotificationPosted(StatusBarNotification sbn){
-        if(sbn==null||sbn.getPackageName().equals(getPackageName()))return;
+        if(sbn==null)return;
+        if(sbn.getPackageName().equals(getPackageName())){if("gf_diagnostic".equals(sbn.getTag()))diagnosticSeen=android.os.SystemClock.elapsedRealtime();return;}
         Notification n=sbn.getNotification();if(n==null||(n.flags & Notification.FLAG_GROUP_SUMMARY)!=0)return;
         CharSequence title=n.extras.getCharSequence(Notification.EXTRA_TITLE,"");
         CharSequence body=n.extras.getCharSequence(Notification.EXTRA_TEXT,"");

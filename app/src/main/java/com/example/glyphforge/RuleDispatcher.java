@@ -129,6 +129,20 @@ public final class RuleDispatcher {
         c.getSharedPreferences("cooldown",0).edit().putLong(r.optString("id"),android.os.SystemClock.elapsedRealtime()).apply();
         GlyphPlayer.get(c).playJson(req.toString(),false,null);
     }
+    public static JSONObject diagnostic(Context c)throws Exception{
+        JSONArray p=new JSONArray();for(int i=0;i<169;i++)p.put(i==84?255:0);
+        JSONObject frame=new JSONObject().put("pixels",p).put("duration",90);
+        JSONObject design=new JSONObject().put("id","diag-design").put("frames",new JSONArray().put(frame));
+        JSONObject step=new JSONObject().put("assetId","diag-design").put("repeat",2).put("pause",120);
+        JSONObject scene=new JSONObject().put("id","diag-scene").put("steps",new JSONArray().put(step));
+        JSONObject state=new JSONObject().put("designs",new JSONArray().put(design)).put("scenes",new JSONArray().put(scene));
+        JSONObject rule=new JSONObject().put("app","diagnostic.fake").put("keyword","beat").put("cooldown",0);
+        JSONArray direct=framesFor(state,"d:diag-design",0),expanded=framesFor(state,"s:diag-scene",0);
+        boolean match=notificationMatch("notification",rule,"diagnostic.fake","TEST BEAT");
+        boolean reject=!notificationMatch("notification",rule,"other.fake","TEST BEAT")&&!notificationMatch("notification",rule,"diagnostic.fake","TEST");
+        boolean valid=direct.length()==1&&expanded.length()==3&&expanded.getJSONObject(2).optInt("duration")==120&&match&&reject&&conditionsMatch(c,rule)&&ready(c,rule);
+        return DeviceDiagnostics.item("Правила и сценарии: синтетический тест",valid?"pass":"fail","Фильтр приложения и слова, условия, повтор и пауза; без записи в библиотеку");
+    }
     public static JSONArray framesFor(JSONObject state,String target,int depth){
         JSONArray out=new JSONArray();if(depth>2||target.length()<3)return out;
         JSONArray designs=state.optJSONArray("designs");

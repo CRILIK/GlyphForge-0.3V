@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
     private static final int PERMISSION_PHONE = 2002;
     private static final int PERMISSION_AUDIO = 2003;
     private static final int PERMISSION_PROJECTION = 2004;
+    private static final int DIAG_AUDIO = 2005, DIAG_POST = 2006;
     private String pendingMusicProfile;
     private String pendingMusicMode="mix";
     private WebView web;
@@ -136,7 +137,38 @@ public class MainActivity extends Activity {
         final String json=org.json.JSONObject.quote(msg);
         runOnUiThread(()->{if(web!=null)web.evaluateJavascript("window.onNativeStatus("+json+")",null);});
     }
+    private void diagnosticResult(String token,String group,org.json.JSONArray result){
+        runOnUiThread(()->{if(web!=null&&!isDestroyed())web.evaluateJavascript("window.GlyphDiagnosticResult("+org.json.JSONObject.quote(token)+","+org.json.JSONObject.quote(group)+","+org.json.JSONObject.quote(result.toString())+")",null);});
+    }
+    private void testNotification(String token){
+        String name="Тестовое уведомление";
+        android.app.NotificationManager nm=getSystemService(android.app.NotificationManager.class);
+        if(!DeviceDiagnostics.notificationAllowed(this)||!DeviceDiagnostics.allowed(this,Manifest.permission.POST_NOTIFICATIONS)||nm==null||!nm.areNotificationsEnabled()){
+            diagnosticResult(token,name,DeviceDiagnostics.one(name,"blocked","Нужны доступ к уведомлениям и разрешение их публикации"));return;}
+        if(!GlyphNotificationListener.diagnosticConnected()){diagnosticResult(token,name,DeviceDiagnostics.one(name,"untested","Listener ещё не подключён"));return;}
+        try{
+            long before=GlyphNotificationListener.diagnosticSeen();
+            String channel="gf_diag_silent";
+            nm.createNotificationChannel(new android.app.NotificationChannel(channel,"Самодиагностика GlyphForge",android.app.NotificationManager.IMPORTANCE_LOW));
+            nm.notify("gf_diagnostic",3092,new android.app.Notification.Builder(this,channel).setSmallIcon(android.R.drawable.ic_dialog_info).setContentTitle("GlyphForge: самопроверка").setContentText("Тестовое уведомление").setOnlyAlertOnce(true).build());
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(()->{
+                boolean delivered=GlyphNotificationListener.diagnosticSeen()>before;nm.cancel("gf_diagnostic",3092);
+                diagnosticResult(token,name,DeviceDiagnostics.one(name,delivered?"pass":"fail",delivered?"Собственное тестовое уведомление получено Listener; правила пользователя не запускались":"Callback Listener не получен за 3 секунды"));
+            },3000);
+        }catch(Exception e){diagnosticResult(token,name,DeviceDiagnostics.one(name,"fail",e.getClass().getSimpleName()));}
+    }
     public final class NativeApi {
+        @JavascriptInterface public void requestDiagnosticAudioPermission(){runOnUiThread(()->requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},DIAG_AUDIO));}
+        @JavascriptInterface public void requestDiagnosticNotificationPermission(){runOnUiThread(()->requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},DIAG_POST));}
+        @JavascriptInterface public void runFullDiagnostics(String token){
+            if(token==null||!token.matches("[0-9-]{1,40}"))return;
+            runOnUiThread(()->{
+                GlyphPlayer.get(MainActivity.this).diagnosticProbe(result->diagnosticResult(token,"Подключение и передача Glyph SDK",result));
+                testNotification(token);
+            });
+            new Thread(()->diagnosticResult(token,"Сеть HTTPS и обновления",DeviceDiagnostics.network()),"gf-diagnostics-network").start();
+            new Thread(()->diagnosticResult(token,"Аудиовыход Visualizer",DeviceDiagnostics.audioProbe(MainActivity.this)),"gf-diagnostics-audio").start();
+        }
         @JavascriptInterface public String getDiagnostics(){return DeviceDiagnostics.collect(MainActivity.this).toString();}
         @JavascriptInterface public void shareReport(String json){
             if(json==null||json.length()>200_000)return;
@@ -214,8 +246,8 @@ public class MainActivity extends Activity {
                 Uri dst=getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI,v);
                 if(dst==null)throw new Exception("Нет доступа к Downloads");
                 try(OutputStream out=getContentResolver().openOutputStream(dst)){if(out==null)throw new Exception("Не удалось записать файл");out.write(bytes);}
-                status("Файл сохранён в Загрузки/GlyphForge");
-            }catch(Exception e){status("Ошибка экспорта: "+e.getMessage());}
+                DiagnosticJournal.mark(MainActivity.this,"local_export_ok");status("Файл сохранён в Загрузки/GlyphForge");
+            }catch(Exception e){DiagnosticJournal.mark(MainActivity.this,"local_export_failed");status("Ошибка экспорта: "+e.getMessage());}
         }
     }
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0b0b"><title>GlyphForge 0.4 — Nothing Phone (4a) Pro</title><link rel="stylesheet" href="style.css"></head>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0b0b"><title>GlyphForge 0.4.2 — Nothing Phone (4a) Pro</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <div class="shell">
 <header class="header"><div class="brand"><div class="brand-icon" aria-hidden="true">▦</div><div><b>GLYPH<span>FORGE</span></b><small>NOTHING PHONE (4a) PRO · 137 LED</small></div></div><div class="device"><span class="online" id="device-light"></span><span id="device-status">Браузерный режим</span><button class="ghost mini" id="help-btn" title="Справка">?</button></div></header>
@@ -67,13 +67,13 @@
 <section id="tab-diagnostics" class="page">
   <div class="page-title"><div><div class="eyebrow">08 / DIAGNOSTICS & UPDATES</div><h1>Проверка <em>приложения</em></h1><p>GlyphForge самостоятельно проверит безопасные функции и подготовит отчёт, который можно отправить разработчику. Личные сообщения, музыка и контакты в отчёт не попадают.</p></div></div>
   <div class="panel padded"><div class="panel-head"><strong>САМОДИАГНОСТИКА</strong><span class="tag" id="diagnostics-state">НЕ ЗАПУЩЕНА</span></div>
-  <p class="hint">Автоматические проверки: форма матрицы (137 LED), библиотека и кадры, формат экспортируемого JSON, сохранение настроек, Android/SDK, разрешения и доступность файлового хранилища. Фактическое свечение физических LED и уведомления от сторонних приложений автоматически подтвердить нельзя.</p>
+  <p class="hint">Полная проверка выполняет синтетические тесты форматов, правил и звука, проверяет HTTPS, передачу кадров SDK и тестовое уведомление. Она не изменяет твою библиотеку и не читает личные сообщения. На матрицу может кратковременно выводиться тестовая точка. Выдай только необходимые разрешения, затем повтори проверку.</p><div class="line" style="flex-wrap:wrap"><button class="outline" id="diag-perm-notifications">Доступ к уведомлениям</button><button class="outline" id="diag-perm-audio">Доступ к аудио</button><button class="outline" id="diag-perm-calls">Доступ к звонкам</button><button class="outline" id="diag-perm-post">Разрешить тестовое уведомление</button></div>
   <div class="line"><button class="primary" id="run-diagnostics">✓ Проверить всё</button><button class="outline" id="export-diagnostics">⇩ Сохранить отчёт</button><button class="outline" id="share-diagnostics">↗ Отправить отчёт</button></div>
   <pre id="diagnostics-output" class="diagnostics-output" aria-live="polite">Проверка ещё не выполнялась</pre>
   </div>
   <div class="panel padded"><div class="panel-head"><strong>ОБНОВЛЕНИЯ</strong><span class="tag">GITHUB RELEASES</span></div>
   <p>При открытии приложения выполняется проверка наличия новых опубликованных версий. APK загружается только с GitHub, установка требует твоего согласия Android.</p>
-  <div id="update-status" class="notice" aria-live="polite">Версия 0.4.0 · проверка обновлений ещё не выполнялась.</div>
+  <div id="update-status" class="notice" aria-live="polite">Версия 0.4.2 · проверка обновлений ещё не выполнялась.</div>
   <div class="line"><button class="outline" id="check-updates">Проверить обновления</button><button class="outline" id="open-releases">Открыть версии GitHub</button></div>
   <p class="hint">Для обновления уже установленной версии требуется одинаковая подпись APK. Разработчик должен публиковать релизные сборки с постоянным защищённым ключом. Тестовые debug APK, подписанные разными ключами, могут потребовать переустановки.</p>
   </div>

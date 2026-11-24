@@ -37,9 +37,11 @@ public final class GlyphPlayer {
     private final List<Integer> delays=new ArrayList<>();
     private int cursor=0,loopsRemaining=0;
     private Status status;
+    private java.util.function.Consumer<JSONArray> diagnostic;
+    private void completeDiagnostic(String result,String detail){if(diagnostic!=null){java.util.function.Consumer<JSONArray> cb=diagnostic;diagnostic=null;cb.accept(DeviceDiagnostics.one("Подключение и передача Glyph SDK",result,detail));}}
     private final Runnable tick=new Runnable(){@Override public void run(){
         if(!connected||pixels.isEmpty()||loopsRemaining<=0)return;
-        try {sendFrame(pixels.get(cursor),toyMode);}catch(Exception e){Log.e(TAG,"Matrix display failed",e);post("Glyph SDK: ошибка вывода; проверь журнал Android Studio");stop();return;}
+        try {sendFrame(pixels.get(cursor),toyMode);completeDiagnostic("pass","SDK зарегистрирован; вызов setAppMatrixFrame завершился без исключения; свечение не подтверждено");}catch(Exception e){completeDiagnostic("fail",e.getClass().getSimpleName());DiagnosticJournal.mark(context,"matrix_send_failed");Log.e(TAG,"Matrix display failed",e);post("Glyph SDK: ошибка вывода; проверь журнал Android Studio");stop();return;}
         int delay=delays.get(cursor);
         cursor++;
         if(cursor>=pixels.size()){cursor=0;loopsRemaining--;}
@@ -52,6 +54,7 @@ public final class GlyphPlayer {
         if(Looper.myLooper()!=Looper.getMainLooper()){
             handler.post(()->playJson(json,asToy,callback));return;
         }
+        completeDiagnostic("untested","Тест прерван другой анимацией");
         try {
             JSONObject root=new JSONObject(json);
             JSONArray frames=root.optJSONArray("frames");
@@ -80,6 +83,7 @@ public final class GlyphPlayer {
     public void playLiveFrame(int[] values){
         if(Looper.myLooper()!=Looper.getMainLooper()){handler.post(()->playLiveFrame(values));return;}
         if(values==null||values.length!=169)return;
+        completeDiagnostic("untested","Тест прерван музыкальным режимом");
         if(!live){stopInternal(true);live=true;}
         liveFrame=values.clone();
         if(connected){try{sendFrame(liveFrame,false);}catch(Exception e){Log.e(TAG,"Live matrix error",e);}}
@@ -155,6 +159,19 @@ public final class GlyphPlayer {
             setter.invoke(manager,frame);
         }finally{ /* tiny bitmap is intentionally kept alive until the SDK copies it */ }
     }
+    public void diagnosticProbe(java.util.function.Consumer<JSONArray> cb){
+        if(Looper.myLooper()!=Looper.getMainLooper()){handler.post(()->diagnosticProbe(cb));return;}
+        if(live||loopsRemaining>0||connecting||diagnostic!=null||toyMode||MusicVisualizerService.isRunning()){
+            cb.accept(DeviceDiagnostics.one("Подключение и передача Glyph SDK","untested","Матрица занята; останови воспроизведение и повтори"));return;
+        }
+        try{
+            JSONArray p=new JSONArray();for(int i=0;i<169;i++)p.put(i==84?128:0);
+            JSONObject req=new JSONObject().put("frames",new JSONArray().put(new JSONObject().put("pixels",p).put("duration",200))).put("repeat",1);
+            playJson(req.toString(),false,message->{});
+            diagnostic=cb;
+            handler.postDelayed(()->{if(diagnostic==cb){completeDiagnostic("fail","Не получено подтверждение подключения/передачи за 6 секунд");stopInternal(true);}},6000);
+        }catch(Exception e){cb.accept(DeviceDiagnostics.one("Подключение и передача Glyph SDK","fail",e.getClass().getSimpleName()));}
+    }
     private void closeOutput(){
         if(manager!=null&&connected){
             try {if(!toyMode)managerClass.getMethod("closeAppMatrix").invoke(manager);}catch(Exception e){Log.w(TAG,"closeAppMatrix",e);}
@@ -165,5 +182,5 @@ public final class GlyphPlayer {
         pixels.clear();delays.clear();cursor=0;loopsRemaining=0;
         if(close)closeOutput();
     }
-    public void stop(){if(Looper.myLooper()!=Looper.getMainLooper()){handler.post(this::stop);return;}stopInternal(true);}
+    public void stop(){if(Looper.myLooper()!=Looper.getMainLooper()){handler.post(this::stop);return;}completeDiagnostic("untested","Тест остановлен");stopInternal(true);}
 }

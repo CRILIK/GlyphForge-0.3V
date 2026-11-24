@@ -285,3 +285,26 @@ def test_phone_navigation_all_tabs_touch_accessible(page):
         assert page.locator(f'#tab-{name}.current').count()==1
 
 
+
+
+def test_diagnostics_v2_real_format_roundtrip(page):
+    page.locator('.nav[data-tab="diagnostics"]').click()
+    page.locator('#run-diagnostics').click()
+    expect(page.locator('#run-diagnostics')).to_be_enabled(timeout=12000)
+    report=json.loads(page.evaluate('GlyphForgeDiagnostics.getReport()'))
+    assert report['reportVersion']==2
+    by_name={t['name']:t for t in report['tests']}
+    for name in ['Glyph Museum JSON: полный цикл','Импорт и экспорт GIF','Преобразование изображения 13×13','Экспорт и импорт JSON','Локальные настройки']:
+        assert by_name[name]['status']=='pass', by_name[name]
+    assert by_name['Физическое свечение Glyph Matrix']['status']=='untested'
+    assert by_name['Импорт видео']['status']=='untested'
+    s=report['summary']
+    assert s['total']==sum(s[k] for k in ['passed','failed','blocked','untested','pending'])
+    assert s['pending']==0
+
+def test_diagnostics_missing_permissions_not_success(page):
+    page.evaluate("""() => {window.GlyphNative={getDiagnostics:()=>JSON.stringify({mode:'android',appVersion:'0.4.2',sdkInstalled:true,savedLibraryValid:true,downloadsWritable:true,notificationAccess:false,audioPermission:false,callPermission:false,postNotificationPermission:false,checks:[]})}}""")
+    report=page.evaluate('GlyphForgeDiagnostics.run()')
+    assert report['summary']['blocked']==4
+    assert all(t['pass'] is None for t in report['tests'] if t['status']=='blocked')
+    assert report['appVersion']=='0.4.2'

@@ -90,7 +90,7 @@ public final class CommunityActivity extends Activity {
                 String safe=filename(URLUtil.guessFileName(url,contentDisposition,mimeType));
                 if(url.startsWith("blob:")){if(safe.endsWith(".bin")||safe.endsWith(".dat"))safe="community-glyph-"+System.currentTimeMillis()+".gforge";downloadBlob(url,safe,mimeType);return;}
                 if(!url.startsWith("https://")){
-                    toast("Ссылка не HTTPS. Открой страницу кнопкой ↗ и скачай во внешнем браузере.");
+                    DiagnosticJournal.mark(this,"community_non_https_blocked");toast("Ссылка не HTTPS. Открой страницу кнопкой ↗ и скачай во внешнем браузере.");
                     return;
                 }
                 DownloadManager.Request request=new DownloadManager.Request(Uri.parse(url));
@@ -99,8 +99,8 @@ public final class CommunityActivity extends Activity {
                 String cookie=CookieManager.getInstance().getCookie(url);if(cookie!=null)request.addRequestHeader("Cookie",cookie);
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"GlyphForge/"+safe);
                 ((DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);
-                toast("Загрузка в Загрузки/GlyphForge…");
-            }catch(Exception ex){toast("Ошибка скачивания: "+ex.getMessage());}
+                DiagnosticJournal.mark(this,"community_https_enqueued");toast("Загрузка в Загрузки/GlyphForge…");
+            }catch(Exception ex){DiagnosticJournal.mark(this,"community_download_failed");toast("Ошибка скачивания: "+ex.getMessage());}
         });
         String requested=getIntent().getStringExtra("url");
         if(requested==null||(!requested.startsWith("https://app.glyphmuseum.com/")&&!requested.startsWith("https://playground.nothing.tech/")))requested="https://app.glyphmuseum.com/";
@@ -142,8 +142,8 @@ public final class CommunityActivity extends Activity {
             try(OutputStream out=getContentResolver().openOutputStream(dest)){
                 if(out==null)throw new Exception("Не удалось записать файл");out.write(bytes);
             }catch(Exception ex){getContentResolver().delete(dest,null,null);throw ex;}
-            toast("Файл сохранён в Загрузки/GlyphForge: "+name);
-        }catch(Exception e){toast("Ошибка экспорта: "+e.getMessage());}
+            DiagnosticJournal.mark(this,"community_blob_saved");toast("Файл сохранён в Загрузки/GlyphForge: "+name);
+        }catch(Exception e){DiagnosticJournal.mark(this,"community_blob_failed");toast("Ошибка экспорта: "+e.getMessage());}
     }
     private void toast(String message){runOnUiThread(()->Toast.makeText(this,message,Toast.LENGTH_LONG).show());}
     @Override public void onBackPressed(){if(browser!=null&&browser.canGoBack())browser.goBack();else finish();}

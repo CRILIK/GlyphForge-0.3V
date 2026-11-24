@@ -85,7 +85,7 @@ public final class MusicVisualizerService extends Service {
                 handler.post(sample);
             }
             updateStatus("Музыкальная визуализация запущена · "+("mix".equals(source)?"выходной микс":"захват воспроизведения"));
-        }catch(Exception e){Log.e(TAG,"Music capture failed",e);updateStatus("Не удалось получить звук: "+e.getMessage());stopSelf();}
+        }catch(Exception e){DiagnosticJournal.mark(this,"music_capture_failed");Log.e(TAG,"Music capture failed",e);updateStatus("Не удалось получить звук: "+e.getMessage());stopSelf();}
         return START_NOT_STICKY;
     }
     private void createChannel(){NotificationManager nm=getSystemService(NotificationManager.class);nm.createNotificationChannel(new NotificationChannel(CHANNEL,"Музыкальные глифы",NotificationManager.IMPORTANCE_LOW));}
