@@ -8,6 +8,11 @@ function diagnostics(){
  tests.push(test('Матрица 13×13 / 137 LED',mask.filter(Boolean).length===137,mask.filter(Boolean).length+' активных точек'));
  const designs=Array.isArray(state.designs)?state.designs:[];
  tests.push(test('Библиотека доступна',Array.isArray(state.designs),designs.length+' проектов'));
+ const exportsReady=typeof window.GlyphFormat?.exportMuseum==='function';
+ tests.push(test('Конвертер Glyph Museum JSON',exportsReady,exportsReady?'Экспортёр доступен':'Экспортёр не загружен'));
+ tests.push(test('Импорт GIF',typeof window.GlyphGIF==='function'||!!window.GlyphGIF,'Модуль декодирования '+(window.GlyphGIF?'доступен':'не найден')));
+ tests.push(test('Экспорт GIF',typeof window.GlyphGIFExport==='function',window.GlyphGIFExport?'Кодировщик доступен':'Кодировщик не найден'));
+
  let frames=0,bad=0;for(const d of designs){if(!Array.isArray(d.frames)||d.frames.length===0){bad++;continue}for(const f of d.frames){frames++;if(!Array.isArray(f.pixels)||f.pixels.length!==169||!f.pixels.every(x=>Number.isFinite(+x)&&+x>=0&&+x<=255)||!(+f.duration>=1))bad++}}
  tests.push(test('Структура кадров',bad===0,frames+' кадров; некорректных '+bad));
  tests.push(test('Правила и сценарии',Array.isArray(state.rules)&&Array.isArray(state.scenes),(state.rules?.length||0)+' правил; '+(state.scenes?.length||0)+' сценариев'));
@@ -25,7 +30,7 @@ $('run-diagnostics').onclick=run;$('export-diagnostics').onclick=reportFile;$('s
 window.GlyphForgeDiagnostics={run,getReport:()=>lastReport};
 const releases='https://github.com/CRILIK/GlyphForge-0.3V/releases';
 $('open-releases').onclick=()=>window.GlyphNative?.openExternal?window.GlyphNative.openExternal(releases):window.open(releases,'_blank','noopener,noreferrer');
-window.GlyphUpdateResult=r=>{const status=$('update-status');try{const o=typeof r==='string'?JSON.parse(r):r;status.textContent=o.available?'Доступна '+o.version+' · '+o.message:(o.message||'Новых выпусков пока нет');if(o.available&&o.url){let b=$('install-update');if(!b){b=document.createElement('button');b.className='primary';b.id='install-update';$('check-updates').parentNode.appendChild(b)}b.textContent='Открыть обновление '+o.version;b.onclick=()=>window.GlyphNative?.openExternal?.(o.url)}}catch(e){status.textContent='Ошибка ответа обновлений: '+e.message}};
+window.GlyphUpdateResult=r=>{const status=$('update-status');try{const o=typeof r==='string'?JSON.parse(r):r;status.textContent=o.available?'Доступна '+o.version+' · '+o.message:(o.message||'Новых выпусков пока нет');if(o.available&&o.url){let b=$('install-update');if(!b){b=document.createElement('button');b.className='primary';b.id='install-update';$('check-updates').parentNode.appendChild(b)}b.textContent='Открыть обновление '+o.version;b.onclick=()=>window.GlyphNative?.openExternal?.(o.url);if(!document.getElementById('update-banner')){const banner=document.createElement('button');banner.id='update-banner';banner.className='primary';banner.textContent='↑ Новая версия '+o.version+' — открыть обновление';banner.onclick=()=>window.GlyphNative?.openExternal?.(o.url);document.querySelector('.header')?.appendChild(banner)}}}catch(e){status.textContent='Ошибка ответа обновлений: '+e.message}};
 $('check-updates').onclick=()=>{if(window.GlyphNative?.checkForUpdates){$('update-status').textContent='Проверяю GitHub Releases…';window.GlyphNative.checkForUpdates()}else $('update-status').textContent='Обновления APK доступны только в Android. Проверь GitHub Releases.'};
 // Run a non-invasive local test after first render, without asking for any permissions.
 setTimeout(run,400);
