@@ -2,8 +2,14 @@ name: Publish signed GlyphForge release
 on:
   push:
     tags: ['v*.*.*']
+    branches: [main]
+    paths: ['app/build.gradle', '.github/workflows/release-apk.yml']
+  workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: glyphforge-signed-release
+  cancel-in-progress: false
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -13,7 +19,35 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Determine release version
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GF_KEYSTORE_B64: ${{ secrets.GF_KEYSTORE_B64 }}
+          GF_KEYSTORE_PASSWORD: ${{ secrets.GF_KEYSTORE_PASSWORD }}
+          GF_KEY_ALIAS: ${{ secrets.GF_KEY_ALIAS }}
+          GF_KEY_PASSWORD: ${{ secrets.GF_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          VERSION=$(sed -n "s/.*versionName '\([0-9.]*\)'.*/\1/p" app/build.gradle)
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          TAG="v$VERSION"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "$TAG" ]]; then
+            echo "::error::Tag does not match versionName"; exit 1
+          fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release already published"; echo "publish=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [[ -z "$GF_KEYSTORE_B64" || -z "$GF_KEYSTORE_PASSWORD" || -z "$GF_KEY_ALIAS" || -z "$GF_KEY_PASSWORD" ]]; then
+            echo "::warning::Signing not configured; run Setup-Release-Signing.ps1 locally."
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" || "$GITHUB_REF_TYPE" == "tag" ]]; then exit 1; fi
+            exit 0
+          fi
+          echo "publish=true" >> "$GITHUB_OUTPUT"
       - name: Require stable release signing secrets
+        if: steps.plan.outputs.publish == 'true'
         env:
           GF_KEYSTORE_B64: ${{ secrets.GF_KEYSTORE_B64 }}
           GF_KEYSTORE_PASSWORD: ${{ secrets.GF_KEYSTORE_PASSWORD }}
@@ -22,6 +56,7 @@ jobs:
         run: |
           test -n "$GF_KEYSTORE_B64" && test -n "$GF_KEYSTORE_PASSWORD" && test -n "$GF_KEY_ALIAS" && test -n "$GF_KEY_PASSWORD" || (echo 'Configure 4 release signing secrets (see docs/RELEASES.md)' && exit 1)
       - name: Install SDK
+        if: steps.plan.outputs.publish == 'true'
         run: |
           export ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
@@ -30,16 +65,20 @@ jobs:
           yes | "$SDKMANAGER" --licenses > /dev/null || true
           "$SDKMANAGER" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
       - name: Get Nothing SDK
+        if: steps.plan.outputs.publish == 'true'
         run: |
           mkdir -p app/libs
           curl --fail --location --retry 3 --output app/libs/glyph-matrix-sdk-2.0.aar https://raw.githubusercontent.com/Nothing-Developer-Programme/GlyphMatrix-Developer-Kit/main/glyph-matrix-sdk-2.0.aar
       - name: Build unsigned release
+        if: steps.plan.outputs.publish == 'true'
         run: |
           curl -fsSL https://services.gradle.org/distributions/gradle-8.13-bin.zip -o /tmp/gradle.zip
           unzip -q /tmp/gradle.zip -d /tmp
           /tmp/gradle-8.13/bin/gradle assembleRelease --no-daemon
       - name: Sign release using private key
+        if: steps.plan.outputs.publish == 'true'
         env:
+          TAG: ${{ steps.plan.outputs.tag }}
           GF_KEYSTORE_B64: ${{ secrets.GF_KEYSTORE_B64 }}
           GF_KEYSTORE_PASSWORD: ${{ secrets.GF_KEYSTORE_PASSWORD }}
           GF_KEY_ALIAS: ${{ secrets.GF_KEY_ALIAS }}
@@ -47,13 +86,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          trap 'rm -f "$RUNNER_TEMP/release.jks"' EXIT
           printf '%s' "$GF_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
           chmod 600 "$RUNNER_TEMP/release.jks"
           "$ANDROID_HOME/build-tools/36.0.0/zipalign" -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/aligned.apk"
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks "$RUNNER_TEMP/release.jks" --ks-key-alias "$GF_KEY_ALIAS" --ks-pass env:GF_KEYSTORE_PASSWORD --key-pass env:GF_KEY_PASSWORD --out "GlyphForge-${GITHUB_REF_NAME}.apk" "$RUNNER_TEMP/aligned.apk"
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify "GlyphForge-${GITHUB_REF_NAME}.apk"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks "$RUNNER_TEMP/release.jks" --ks-key-alias "$GF_KEY_ALIAS" --ks-pass env:GF_KEYSTORE_PASSWORD --key-pass env:GF_KEY_PASSWORD --out "GlyphForge-${TAG}.apk" "$RUNNER_TEMP/aligned.apk"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify "GlyphForge-${TAG}.apk"
           rm -f "$RUNNER_TEMP/release.jks"
       - name: Publish release on GitHub
+        if: steps.plan.outputs.publish == 'true'
         env:
+          TAG: ${{ steps.plan.outputs.tag }}
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${GITHUB_REF_NAME}" "GlyphForge-${GITHUB_REF_NAME}.apk" --title "GlyphForge ${GITHUB_REF_NAME}" --generate-notes
+        run: gh release create "${TAG}" "GlyphForge-${TAG}.apk" --target "$GITHUB_SHA" --title "GlyphForge ${TAG}" --generate-notes

@@ -39,4 +39,16 @@ def test_android_update_banner_and_diagnostics():
     assert 'update-banner' in diag
     assert 'GlyphForge_Diagnostics.json' in diag
     assert 'Nothing SDK загружен' in diag
-    assert "versionName '0.4.2'" in (ROOT/'app/build.gradle').read_text()
+    assert "versionName '0.4.3'" in (ROOT/'app/build.gradle').read_text()
+
+
+def test_release_signed_update_path():
+    source=(JAVA/'UpdateInstaller.java').read_text()
+    assert 'GET_SIGNING_CERTIFICATES' in source
+    assert 'sameSigners' in source
+    assert 'getLongVersionCode()<=installed.getLongVersionCode()' in source
+    assert 'FLAG_GRANT_READ_URI_PERMISSION' in source
+    assert 'REQUEST_INSTALL_PACKAGES' in (ROOT/'app/src/main/AndroidManifest.xml').read_text()
+    wf=(ROOT/'.github/workflows/release-apk.yml').read_text()
+    assert 'apksigner' in wf and 'gh release create' in wf and 'workflow_dispatch:' in wf
+    assert 'secrets.GF_KEYSTORE_B64' in wf

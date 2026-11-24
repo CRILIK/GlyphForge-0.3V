@@ -179,6 +179,11 @@ public class MainActivity extends Activity {
                 catch(Exception e){status("Не удалось открыть меню отправки");}
             });
         }
+        @JavascriptInterface public void installUpdate(String url){
+            runOnUiThread(()->UpdateInstaller.start(MainActivity.this,url,message->runOnUiThread(()->{
+                if(web!=null&&!isDestroyed())web.evaluateJavascript("window.GlyphInstallStatus("+org.json.JSONObject.quote(message)+")",null);
+            })));
+        }
         @JavascriptInterface public void checkForUpdates(){
             UpdateChecker.check(MainActivity.this, result -> runOnUiThread(()->{
                 if(web!=null)web.evaluateJavascript("window.GlyphUpdateResult("+org.json.JSONObject.quote(result)+")",null);
