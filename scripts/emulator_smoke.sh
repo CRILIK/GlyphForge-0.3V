@@ -33,7 +33,7 @@ import re, sys, xml.etree.ElementTree as ET, subprocess
 root=ET.parse(sys.argv[1]).getroot(); needle=sys.argv[2]
 items=[n for n in root.iter('node') if needle in n.attrib.get('text','') and n.attrib.get('clickable')=='true']
 assert items, f'Clickable {needle!r} not present in UI'
-coords=[int(x) for x in re.findall(r'\\d+',items[0].attrib.get('bounds',''))]
+coords=[int(x) for x in re.findall(r'\d+',items[0].attrib.get('bounds',''))]
 assert len(coords)==4, f'Bad bounds: {coords}'
 if needle=='Назад':
     assert coords[1]>25 and coords[3]-coords[1]>40, f'Back button covered by status bar: {coords}'
