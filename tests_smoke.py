@@ -13,7 +13,7 @@ SCRIPTS = ('format.js','kitten-sample.js','gif.js','gifexport.js','app.js','musi
 @pytest.fixture(scope='session')
 def browser():
     with sync_playwright() as p:
-        b = p.chromium.launch(headless=True, executable_path=shutil.which('chromium'), args=['--no-sandbox'])
+        b = p.chromium.launch(headless=True, channel='chrome' if (shutil.which('google-chrome') or shutil.which('google-chrome-stable')) else None, executable_path=None if (shutil.which('google-chrome') or shutil.which('google-chrome-stable')) else shutil.which('chromium'), args=['--no-sandbox'])
         yield b
         b.close()
 
