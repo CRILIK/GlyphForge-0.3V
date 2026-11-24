@@ -42,15 +42,17 @@ public final class CommunityActivity extends Activity {
             view.setPadding(bars.left,bars.top,bars.right,bars.bottom);
             return insets;
         });
-        LinearLayout header=new LinearLayout(this);header.setPadding(dp(8),dp(5),dp(8),dp(5));header.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout header=new LinearLayout(this);header.setPadding(dp(8),dp(12),dp(8),dp(10));header.setGravity(android.view.Gravity.CENTER_VERTICAL);
         Button back=new Button(this);back.setText("‹ Назад");back.setMinHeight(dp(48));back.setOnClickListener(v->finish());header.addView(back);
         TextView title=new TextView(this);title.setText("  Сообщество");title.setTextColor(Color.WHITE);title.setTextSize(14);
         header.addView(title,new LinearLayout.LayoutParams(0,dp(48),1));
         Button external=new Button(this);external.setText("↗");external.setContentDescription("Открыть сайт во внешнем браузере");external.setMinHeight(dp(48));
         external.setOnClickListener(v->{try{Uri u=Uri.parse(browser.getUrl());if("https".equals(u.getScheme()))startActivity(new Intent(Intent.ACTION_VIEW,u));}catch(Exception ignored){}});
         header.addView(external);
+        header.setMinimumHeight(dp(64));
         root.addView(header);
         browser=new WebView(this);root.addView(browser,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
+        root.requestApplyInsets();
         browser.getSettings().setJavaScriptEnabled(true);browser.getSettings().setDomStorageEnabled(true);
         browser.getSettings().setAllowFileAccess(false);browser.getSettings().setAllowContentAccess(false);
         browser.getSettings().setAllowFileAccessFromFileURLs(false);browser.getSettings().setAllowUniversalAccessFromFileURLs(false);
@@ -73,9 +75,12 @@ public final class CommunityActivity extends Activity {
             @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest req){
                 Uri url=req.getUrl();String scheme=url.getScheme();
                 if("https".equals(scheme))return false;
+                // Sites often create an in-memory blob: URL for GIF/JSON exports.
+                // Blocking that navigation prevents WebView's download handler from receiving it.
+                if("blob".equals(scheme)||"data".equals(scheme))return false;
                 if("http".equals(scheme)){
                     // Do not navigate community browsing through an insecure transport.
-                    toast("Сайт требует HTTP. Открой его в обычном браузере.");return true;
+                    toast("Эта ссылка использует HTTP: открой сайт через ↗ в обычном браузере.");return true;
                 }
                 return true;
             }
@@ -84,7 +89,10 @@ public final class CommunityActivity extends Activity {
             try{
                 String safe=filename(URLUtil.guessFileName(url,contentDisposition,mimeType));
                 if(url.startsWith("blob:")){if(safe.endsWith(".bin")||safe.endsWith(".dat"))safe="community-glyph-"+System.currentTimeMillis()+".gforge";downloadBlob(url,safe,mimeType);return;}
-                if(!url.startsWith("https://"))throw new Exception("Ссылка не HTTPS");
+                if(!url.startsWith("https://")){
+                    toast("Ссылка не HTTPS. Открой страницу кнопкой ↗ и скачай во внешнем браузере.");
+                    return;
+                }
                 DownloadManager.Request request=new DownloadManager.Request(Uri.parse(url));
                 request.setTitle(safe);request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 if(userAgent!=null)request.addRequestHeader("User-Agent",userAgent);
