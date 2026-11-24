@@ -1,0 +1,27 @@
+name: GlyphForge browser QA
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Chromium test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest playwright
+          python -m playwright install --with-deps chromium
+      - name: Run automated editor, import, library, rules and music tests
+        run: python -m pytest -q tests_smoke.py --junitxml=qa-results.xml
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GlyphForge-QA-results
+          path: qa-results.xml

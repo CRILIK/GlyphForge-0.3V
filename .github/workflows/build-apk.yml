@@ -43,3 +43,53 @@ jobs:
         with:
           name: GlyphForge-debug-APK
           path: app/build/outputs/apk/debug/*.apk
+
+  emulator-smoke:
+    needs: apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: GlyphForge-debug-APK
+          path: apk
+      - name: Enable KVM for Android emulator
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Android emulator app launch
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          script: |
+            set -euxo pipefail
+            mkdir -p emulator-artifacts
+            APK="$(find apk -name '*.apk' | head -n 1)"
+            test -n "$APK"
+            adb install -r "$APK"
+            adb logcat -c
+            adb shell am start -W -n com.example.glyphforge/.MainActivity
+            sleep 8
+            test -n "$(adb shell pidof com.example.glyphforge | tr -d '\r')"
+            adb shell uiautomator dump /sdcard/window.xml || true
+            adb shell cat /sdcard/window.xml > emulator-artifacts/window.xml || true
+            adb exec-out screencap -p > emulator-artifacts/launch.png
+            adb logcat -d -b crash > emulator-artifacts/crash.log
+            if grep -q 'FATAL EXCEPTION' emulator-artifacts/crash.log; then
+              cat emulator-artifacts/crash.log
+              exit 1
+            fi
+      - name: Upload emulator screenshot and crash log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: GlyphForge-emulator-evidence
+          path: emulator-artifacts/
+          if-no-files-found: ignore
