@@ -18,7 +18,7 @@ jobs:
           python -m pip install pytest playwright
           python -m playwright install --with-deps chrome
       - name: Run automated editor, import, library, rules and music tests
-        run: python -m pytest -q tests_smoke.py --junitxml=qa-results.xml
+        run: python -m pytest -q tests_smoke.py test_release_ux.py --junitxml=qa-results.xml
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
