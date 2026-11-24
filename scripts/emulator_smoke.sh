@@ -6,6 +6,11 @@ if [[ -z "$APK" ]]; then
   echo "APK artifact not found"; find apk -maxdepth 4 -type f -print; exit 1
 fi
 adb install -r "$APK"
+# Pixel Launcher on a cold-booted Google APIs emulator can display an ANR
+# over the application under test. Stop only the emulator's home packages,
+# never GlyphForge, before launch. A genuine GlyphForge ANR still fails QA.
+adb shell am force-stop com.google.android.apps.nexuslauncher || true
+adb shell am force-stop com.android.launcher3 || true
 adb logcat -c
 adb shell am start -W -n com.example.glyphforge/.MainActivity
 sleep 8
@@ -35,7 +40,8 @@ import re, sys, xml.etree.ElementTree as ET, subprocess
 root=ET.parse(sys.argv[1]).getroot()
 needle=sys.argv[2]
 for n in root.iter('node'):
-    if needle.casefold() not in n.attrib.get('text','').casefold() or n.attrib.get('clickable')!='true':
+    label=(n.attrib.get('text','')+' '+n.attrib.get('content-desc','')).casefold()
+    if needle.casefold() not in label or n.attrib.get('clickable')!='true':
         continue
     coords=[int(x) for x in re.findall(r'\d+',n.attrib.get('bounds',''))]
     if len(coords)!=4 or coords[2]-coords[0]<32 or coords[3]-coords[1]<32:
@@ -51,6 +57,17 @@ sys.exit(3)
 PY
     then
       return 0
+    fi
+    # If the system launcher displays a delayed ANR, recover just that
+    # process and bring the actual app forward. Do not dismiss app ANRs.
+    if grep -Eiq "(Pixel Launcher|Launcher3).{0,80}(isn't responding|is not responding|keeps stopping)" "emulator-artifacts/$snapshot.xml"; then
+      echo "Recovering unrelated emulator launcher ANR"
+      adb shell am force-stop com.google.android.apps.nexuslauncher || true
+      adb shell am force-stop com.android.launcher3 || true
+      adb shell am start -W -n com.example.glyphforge/.MainActivity
+      sleep 3
+      (( attempt += 1 ))
+      continue
     fi
     if [[ "$needle" == "Назад" ]]; then
       echo "Back button is not visible"; return 1
