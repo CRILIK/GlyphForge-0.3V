@@ -22,29 +22,40 @@ adb logcat -d -b crash > emulator-artifacts/crash.log || true
 if grep -q 'FATAL EXCEPTION' emulator-artifacts/crash.log; then
   cat emulator-artifacts/crash.log; exit 1
 fi
-# Verify community header is below Android status bar and back is clickable.
-adb shell am start -W -n com.example.glyphforge/.CommunityActivity
-sleep 3
+# The community activity is intentionally not exported. Navigate through
+# the real app UI instead of trying to start it from adb shell.
+tap_ui_label() {
+  local snapshot="$1" needle="$2"
+  adb shell uiautomator dump /sdcard/window.xml >/dev/null
+  adb shell cat /sdcard/window.xml > "emulator-artifacts/$snapshot.xml"
+  python3 - "emulator-artifacts/$snapshot.xml" "$needle" <<'PY'
+import re, sys, xml.etree.ElementTree as ET, subprocess
+root=ET.parse(sys.argv[1]).getroot(); needle=sys.argv[2]
+items=[n for n in root.iter('node') if needle in n.attrib.get('text','') and n.attrib.get('clickable')=='true']
+assert items, f'Clickable {needle!r} not present in UI'
+coords=[int(x) for x in re.findall(r'\\d+',items[0].attrib.get('bounds',''))]
+assert len(coords)==4, f'Bad bounds: {coords}'
+if needle=='Назад':
+    assert coords[1]>25 and coords[3]-coords[1]>40, f'Back button covered by status bar: {coords}'
+subprocess.run(['adb','shell','input','tap',str((coords[0]+coords[2])//2),str((coords[1]+coords[3])//2)],check=True)
+print(f'PASS: tapped {needle!r} at {coords}')
+PY
+}
+tap_ui_label library-tab 'Библиотека'
+sleep 2
+tap_ui_label library-community 'Glyph Museum'
+sleep 4
 adb shell uiautomator dump /sdcard/community.xml >/dev/null || true
 adb shell cat /sdcard/community.xml > emulator-artifacts/community.xml || true
 adb exec-out screencap -p > emulator-artifacts/community.png
+tap_ui_label community-back 'Назад'
+sleep 2
+adb shell uiautomator dump /sdcard/returned.xml >/dev/null
+adb shell cat /sdcard/returned.xml > emulator-artifacts/returned.xml
 python3 - <<'PY'
-import re, xml.etree.ElementTree as ET, subprocess
 from pathlib import Path
-xml=Path('emulator-artifacts/community.xml').read_text()
-root=ET.fromstring(xml)
-items=[n for n in root.iter('node') if 'Назад' in n.attrib.get('text','')]
-assert items, 'Community Back button is missing from accessibility tree'
-box=items[0].attrib.get('bounds','')
-pts=[int(x) for x in re.findall(r'\\d+',box)]
-assert len(pts)==4 and pts[1]>25 and pts[3]-pts[1]>40, f'Back button may be covered by status bar: {box}'
-x=(pts[0]+pts[2])//2; y=(pts[1]+pts[3])//2
-subprocess.run(['adb','shell','input','tap',str(x),str(y)],check=True)
-print(f'PASS: Community Back button at {box}, tapped ({x},{y})')
+s=Path('emulator-artifacts/returned.xml').read_text()
+assert 'Библиотека' in s, 'Back button did not return to GlyphForge'
+print('PASS: community back works and respects Android status bar')
 PY
-sleep 1
-adb shell dumpsys activity activities | grep -Eq 'com.example.glyphforge/.MainActivity|com.example.glyphforge/com.example.glyphforge.MainActivity' || {
-  echo 'Community back did not return to GlyphForge'; exit 1;
-}
-echo "PASS: community back action works and respects top system inset"
 echo "PASS: APK installed, MainActivity launched, process alive, no fatal crash"
