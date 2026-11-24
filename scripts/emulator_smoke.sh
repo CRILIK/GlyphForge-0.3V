@@ -35,7 +35,7 @@ import re, sys, xml.etree.ElementTree as ET, subprocess
 root=ET.parse(sys.argv[1]).getroot()
 needle=sys.argv[2]
 for n in root.iter('node'):
-    if needle not in n.attrib.get('text','') or n.attrib.get('clickable')!='true':
+    if needle.casefold() not in n.attrib.get('text','').casefold() or n.attrib.get('clickable')!='true':
         continue
     coords=[int(x) for x in re.findall(r'\d+',n.attrib.get('bounds',''))]
     if len(coords)!=4 or coords[2]-coords[0]<32 or coords[3]-coords[1]<32:
