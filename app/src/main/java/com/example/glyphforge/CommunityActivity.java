@@ -98,7 +98,7 @@ public final class CommunityActivity extends Activity {
                 if(userAgent!=null)request.addRequestHeader("User-Agent",userAgent);
                 // Authentication cookies are not copied to DownloadManager. For authenticated direct downloads use the site in the external browser.
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"GlyphForge/"+safe);
-                ((DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);
+                long id=((DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);trackDownload(id);
                 DiagnosticJournal.mark(this,"community_https_enqueued");toast("Загрузка в Загрузки/GlyphForge…");
             }catch(Exception ex){DiagnosticJournal.mark(this,"community_download_failed");toast("Ошибка скачивания: "+ex.getMessage());}
         });
@@ -108,6 +108,10 @@ public final class CommunityActivity extends Activity {
     }
     private static String origin(String url){try{Uri u=Uri.parse(url);return "https".equals(u.getScheme())&&u.getHost()!=null?"https://"+u.getHost()+":"+u.getPort():null;}catch(Exception e){return null;}}
     private static boolean safeMedia(String name,String mime){String n=name.toLowerCase(java.util.Locale.ROOT);String m=mime==null?"":mime.toLowerCase(java.util.Locale.ROOT);if(n.endsWith(".apk")||m.contains("package-archive"))return false;return n.matches(".*\\.(gif|png|jpg|jpeg|webp|mp4|webm|json|gforge)$")||m.startsWith("image/")||m.startsWith("video/")||m.equals("application/json")||m.equals("application/octet-stream");}
+    private void trackDownload(long id){Context app=getApplicationContext();new Thread(()->{
+        DownloadManager dm=(DownloadManager)app.getSystemService(Context.DOWNLOAD_SERVICE);
+        for(int i=0;i<60;i++){try(android.database.Cursor c=dm.query(new DownloadManager.Query().setFilterById(id))){if(c!=null&&c.moveToFirst()){int status=c.getInt(c.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));if(status==DownloadManager.STATUS_SUCCESSFUL){DiagnosticJournal.mark(app,"community_https_completed");return;}if(status==DownloadManager.STATUS_FAILED){DiagnosticJournal.mark(app,"community_download_failed");return;}}Thread.sleep(1000);}catch(Exception e){return;}}
+    },"gf-download-status").start();}
     private int dp(int d){return (int)(d*getResources().getDisplayMetrics().density+.5f);}
     private String filename(String name){
         if(name==null||name.isBlank())name="community-glyph-"+System.currentTimeMillis()+".gif";

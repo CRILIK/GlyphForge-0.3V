@@ -14,5 +14,10 @@ public final class DiagnosticJournal {
             c.getSharedPreferences("gf_diagnostic_events",0).edit().putString("events",fresh.toString()).apply();
         }catch(Exception ignored){}
     }
+    public static synchronized void markEvent(Context c,String code){
+        JSONArray events=read(c);long now=System.currentTimeMillis();
+        for(int i=events.length()-1;i>=0;i--){JSONObject e=events.optJSONObject(i);if(e!=null&&code.equals(e.optString("code"))&&now-e.optLong("timeMs")<300000)return;}
+        mark(c,code);
+    }
     public static synchronized JSONArray read(Context c){try{return new JSONArray(c.getSharedPreferences("gf_diagnostic_events",0).getString("events","[]"));}catch(Exception e){return new JSONArray();}}
 }

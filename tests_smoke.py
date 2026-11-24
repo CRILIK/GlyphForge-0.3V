@@ -3,6 +3,9 @@ from pathlib import Path
 import re
 import json
 import shutil
+import threading
+from functools import partial
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import pytest
 from playwright.sync_api import sync_playwright, expect
 
@@ -17,25 +20,27 @@ def browser():
         yield b
         b.close()
 
+@pytest.fixture(scope='session')
+def app_url():
+    server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(ASSETS)))
+    thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+    yield f'http://127.0.0.1:{server.server_port}/index.html'
+    server.shutdown();server.server_close()
+
 @pytest.fixture
-def page(browser):
-    pg = browser.new_page(viewport={'width':390, 'height':844}, accept_downloads=True)
+def page(browser, app_url):
+    pg=browser.new_page(viewport={'width':390,'height':844},accept_downloads=True)
     errors=[]
     pg.on('pageerror',lambda e:errors.append(str(e)))
-    html = (ASSETS/'index.html').read_text(encoding='utf-8')
-    html = re.sub(r'<script src="[^"]+"></script>', '', html)
-    pg.set_content(html)
-    # The test harness uses an about:blank origin; provide origin-like localStorage.
-    pg.evaluate('''() => {const memory = new Map(); Object.defineProperty(window, 'localStorage', {value: {getItem:k=>memory.has(k)?memory.get(k):null,setItem:(k,v)=>memory.set(k,String(v)),removeItem:k=>memory.delete(k),clear:()=>memory.clear()},configurable:true});}''')
-    for src in SCRIPTS:
-        pg.add_script_tag(content=(ASSETS/src).read_text(encoding='utf-8'))
+    pg.goto(app_url,wait_until='load')
+    pg.wait_for_function('typeof GlyphForgeTest !== "undefined"')
     yield pg
     assert not errors, errors
     pg.close()
 
 
 def test_loaded_and_matrix(page):
-    assert page.title().startswith('GlyphForge 0.4')
+    assert page.title().startswith('GlyphForge 0.5')
     assert page.evaluate('GlyphForgeTest.maskCount()')==137
     assert len(page.evaluate('GlyphForgeTest.getState().designs'))>=3
     assert page.locator('#device-status').inner_text().startswith('Браузер')
@@ -297,7 +302,7 @@ def test_diagnostics_v2_real_format_roundtrip(page):
     for name in ['Glyph Museum JSON: полный цикл','Импорт и экспорт GIF','Преобразование изображения 13×13','Экспорт и импорт JSON','Локальные настройки']:
         assert by_name[name]['status']=='pass', by_name[name]
     assert by_name['Физическое свечение Glyph Matrix']['status']=='untested'
-    assert by_name['Импорт видео']['status']=='untested'
+    assert by_name['Импорт видео']['status'] in ('pass','untested')
     s=report['summary']
     assert s['total']==sum(s[k] for k in ['passed','failed','blocked','untested','pending'])
     assert s['pending']==0
@@ -370,3 +375,16 @@ def test_library_preview_is_read_only_and_navigation_unlocks(page):
     assert not page.evaluate('GlyphForgeTest.isPlaying()')
     page.locator('#library-grid .design-card').first.get_by_role('button',name='Редакт.',exact=True).click()
     expect(page.locator('#clear-frame')).to_be_enabled()
+
+
+def test_backup_diagnostic_preserves_data_and_disables_rules(page):
+    assert page.evaluate('GlyphBackupDiagnostic()') is True
+
+def test_backup_export_contains_all_categories(page):
+    page.locator('.nav[data-tab="library"]').click()
+    with page.expect_download() as exp:
+        page.locator('#backup-full').click()
+    item=exp.value
+    backup=json.loads(Path(item.path()).read_text(encoding='utf-8'))
+    assert backup['kind']=='glyphforge-backup'
+    assert all(k in backup['state'] for k in ('designs','rules','scenes','musicProfiles'))

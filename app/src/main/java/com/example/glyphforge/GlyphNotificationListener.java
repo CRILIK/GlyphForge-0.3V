@@ -66,6 +66,7 @@ public final class GlyphNotificationListener extends NotificationListenerService
         if(sbn==null)return;
         if(sbn.getPackageName().equals(getPackageName())){if("gf_diagnostic".equals(sbn.getTag()))diagnosticSeen=android.os.SystemClock.elapsedRealtime();return;}
         Notification n=sbn.getNotification();if(n==null||(n.flags & Notification.FLAG_GROUP_SUMMARY)!=0)return;
+        DiagnosticJournal.markEvent(this,"notification_event_received");
         // Only inspect text for an enabled matching keyword rule.
         boolean needed=false;
         try{JSONArray rules=new JSONObject(Store.read(this)).optJSONArray("rules");

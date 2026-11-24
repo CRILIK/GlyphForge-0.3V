@@ -28,6 +28,7 @@ jobs:
           node --check app/src/main/assets/music.js
           node --check app/src/main/assets/format.js
           node --check app/src/main/assets/diagnostics.js
+          node --check app/src/main/assets/diagnostic-media.js
       - name: Install Android SDK platform
         shell: bash
         run: |
@@ -47,10 +48,24 @@ jobs:
           curl -fsSL https://services.gradle.org/distributions/gradle-8.13-bin.zip -o /tmp/gradle.zip
           unzip -q /tmp/gradle.zip -d /tmp
           /tmp/gradle-8.13/bin/gradle assembleDebug --no-daemon
+      - name: APK signature, SHA-256 and permission inventory
+        run: |
+          APK=$(find app/build/outputs/apk/debug -name '*.apk' -print -quit)
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs "$APK" | tee apk-certificate.txt
+          sha256sum "$APK" | tee apk-sha256.txt
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump permissions "$APK" | tee apk-permissions.txt
+          if grep -E "android.permission.(REQUEST_INSTALL_PACKAGES|INSTALL_PACKAGES|READ_SMS|READ_CONTACTS|READ_CALL_LOG)" apk-permissions.txt; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: GlyphForge-debug-APK
           path: app/build/outputs/apk/debug/*.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GlyphForge-APK-security-inventory
+          path: |
+            apk-certificate.txt
+            apk-sha256.txt
+            apk-permissions.txt
 
   emulator-smoke:
     needs: apk

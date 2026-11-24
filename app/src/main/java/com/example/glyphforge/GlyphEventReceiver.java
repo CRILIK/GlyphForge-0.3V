@@ -20,8 +20,7 @@ public final class GlyphEventReceiver extends BroadcastReceiver {
         else if(Intent.ACTION_BATTERY_LOW.equals(a))RuleDispatcher.fire(context,"battery_low","","");
         else if(TelephonyManager.ACTION_PHONE_STATE_CHANGED.equals(a)
             &&context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED){
-            if(TelephonyManager.EXTRA_STATE_RINGING.equals(intent.getStringExtra(TelephonyManager.EXTRA_STATE)))
-                RuleDispatcher.fire(context,"call","","");
+            if(TelephonyManager.EXTRA_STATE_RINGING.equals(intent.getStringExtra(TelephonyManager.EXTRA_STATE))){DiagnosticJournal.markEvent(context,"call_event_received");RuleDispatcher.fire(context,"call","","");}
         }
     }
 }

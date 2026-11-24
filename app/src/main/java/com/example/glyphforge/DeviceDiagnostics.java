@@ -32,8 +32,10 @@ public final class DeviceDiagnostics {
         try{
             result.put("mode","android");result.put("androidSdk",Build.VERSION.SDK_INT);
             result.put("deviceModel",Build.MANUFACTURER+" "+Build.MODEL);
-            android.content.pm.PackageInfo info=c.getPackageManager().getPackageInfo(c.getPackageName(),0);
+            android.content.pm.PackageInfo info=c.getPackageManager().getPackageInfo(c.getPackageName(),PackageManager.GET_SIGNING_CERTIFICATES);
             result.put("appVersion",info.versionName);result.put("versionCode",info.getLongVersionCode());
+            if(info.signingInfo!=null){JSONArray fingerprints=new JSONArray();for(android.content.pm.Signature sig:info.signingInfo.getApkContentsSigners()){byte[] digest=java.security.MessageDigest.getInstance("SHA-256").digest(sig.toByteArray());StringBuilder hex=new StringBuilder();for(byte b:digest)hex.append(String.format(java.util.Locale.ROOT,"%02x",b&255));fingerprints.put(hex.toString());}result.put("certificateSha256",fingerprints);}
+            if(info.applicationInfo!=null)result.put("debuggable",(info.applicationInfo.flags&android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE)!=0);
         }catch(Exception ex){try{result.put("error",ex.getClass().getSimpleName());}catch(Exception ignored){}}
         try{
             result.put("sdkInstalled",sdkInstalled());
@@ -55,6 +57,7 @@ public final class DeviceDiagnostics {
         }catch(Exception ex){try{result.put("error",ex.getClass().getSimpleName());}catch(Exception ignored){}}
         return result;
     }
+    public static JSONObject permissions(Context c){JSONObject r=new JSONObject();try{r.put("notificationAccess",notificationAllowed(c));r.put("notificationListenerConnected",GlyphNotificationListener.diagnosticConnected());}catch(Exception ignored){}return r;}
     private static boolean sdkInstalled(){try{Class.forName("com.nothing.ketchum.GlyphMatrixManager");return true;}catch(Throwable ex){return false;}}
     static boolean allowed(Context c,String p){return c.checkSelfPermission(p)==PackageManager.PERMISSION_GRANTED;}
     static boolean notificationAllowed(Context c){String enabled=Settings.Secure.getString(c.getContentResolver(),"enabled_notification_listeners");return enabled!=null&&enabled.contains(c.getPackageName()+"/");}
@@ -86,9 +89,26 @@ public final class DeviceDiagnostics {
         Visualizer v=null;try{
             v=new Visualizer(0);int[] range=Visualizer.getCaptureSizeRange();v.setCaptureSize(Math.min(1024,range[1]));
             int enable=v.setEnabled(true);byte[] fft=new byte[v.getCaptureSize()];int read=v.getFft(fft);
-            return one(name,enable==Visualizer.SUCCESS&&read==Visualizer.SUCCESS?"pass":"fail","Коды enable="+enable+", FFT="+read+"; наличие музыки не оценивается");
+            JSONArray rows=one(name,enable==Visualizer.SUCCESS&&read==Visualizer.SUCCESS?"pass":"fail","Коды enable="+enable+", FFT="+read+"; наличие музыки не оценивается");v.setEnabled(false);v.release();v=null;rows.put(toneProbe());return rows;
         }catch(Throwable e){return one(name,"fail",e.getClass().getSimpleName());}
         finally{if(v!=null)try{v.setEnabled(false);v.release();}catch(Exception ignored){}}
+    }
+    private static JSONObject toneProbe(){
+        String name="Музыка: тест собственного звукового сигнала";
+        android.media.AudioTrack track=null;Visualizer fx=null;
+        try{
+            int sampleRate=44100;short[] pcm=new short[sampleRate];
+            for(int i=0;i<pcm.length;i++)pcm[i]=(short)(3500*Math.sin(2*Math.PI*440*i/sampleRate));
+            track=new android.media.AudioTrack.Builder().setAudioAttributes(new android.media.AudioAttributes.Builder().setUsage(android.media.AudioAttributes.USAGE_MEDIA).setContentType(android.media.AudioAttributes.CONTENT_TYPE_MUSIC).build()).setAudioFormat(new android.media.AudioFormat.Builder().setSampleRate(sampleRate).setEncoding(android.media.AudioFormat.ENCODING_PCM_16BIT).setChannelMask(android.media.AudioFormat.CHANNEL_OUT_MONO).build()).setBufferSizeInBytes(pcm.length*2).setTransferMode(android.media.AudioTrack.MODE_STATIC).build();
+            if(track.write(pcm,0,pcm.length)!=pcm.length)return item(name,"untested","AudioTrack не принял тестовый сигнал");
+            track.setVolume(0.15f);
+            fx=new Visualizer(track.getAudioSessionId());int[] limits=Visualizer.getCaptureSizeRange();fx.setCaptureSize(Math.min(1024,limits[1]));
+            if(fx.setEnabled(true)!=Visualizer.SUCCESS)return item(name,"untested","Visualizer аудиосессии недоступен");
+            byte[] fft=new byte[fx.getCaptureSize()];track.play();boolean detected=false;
+            for(int i=0;i<7;i++){Thread.sleep(100);if(fx.getFft(fft)==Visualizer.SUCCESS){for(int k=2;k<fft.length;k++)if(Math.abs((int)fft[k])>2)detected=true;}if(detected)break;}
+            return item(name,detected?"pass":"untested",detected?"Собственный тихий сигнал 440 Гц; FFT содержит ненулевые компоненты":"Сигнал не обнаружен; возможны ограничения аудиосессии или громкость");
+        }catch(Throwable e){return item(name,"untested",e.getClass().getSimpleName());}
+        finally{if(fx!=null)try{fx.setEnabled(false);fx.release();}catch(Exception ignored){}if(track!=null)try{track.stop();}catch(Exception ignored){}finally{track.release();}}
     }
     public static JSONArray network(){
         JSONArray rows=new JSONArray();
@@ -97,9 +117,9 @@ public final class DeviceDiagnostics {
             conn=(HttpURLConnection)new URL(target[1]).openConnection();conn.setConnectTimeout(3500);conn.setReadTimeout(3500);
             conn.setRequestProperty("User-Agent","GlyphForge-Diagnostics");conn.setInstanceFollowRedirects(false);
             int code=conn.getResponseCode();
-            boolean valid=code>=200&&code<400||target[0].contains("Releases")&&code==404;
+            boolean valid=code>=200&&code<400;
             String detail="TLS/HTTP "+code+(code==404&&target[0].contains("Releases")?"; опубликованный релиз не найден":"; без cookies и авторизации");
-            rows.put(item(target[0],valid?"pass":"fail",detail));
+            rows.put(item(target[0],code==404&&target[0].contains("Releases")?"blocked":valid?"pass":"fail",detail));
         }catch(Exception ex){rows.put(item(target[0],"fail",ex.getClass().getSimpleName()));}finally{if(conn!=null)conn.disconnect();}}
         rows.put(item("Скачивание чужих работ с авторизацией","untested","HTTPS-проверка не подтверждает загрузку конкретного GIF/JSON; см. журнал попыток"));
         return rows;

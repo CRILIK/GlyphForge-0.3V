@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
         });
         web.loadUrl("file:///android_asset/index.html");
     }
+    @Override protected void onResume(){super.onResume();if(web!=null)web.evaluateJavascript("window.GlyphPermissionRefresh?.()",null);}
     @Override protected void onActivityResult(int req,int result,Intent data){
         super.onActivityResult(req,result,data);
         if(req==PERMISSION_PROJECTION){
@@ -169,6 +170,9 @@ public class MainActivity extends Activity {
             });
             new Thread(()->diagnosticResult(token,"Сеть HTTPS и обновления",DeviceDiagnostics.network()),"gf-diagnostics-network").start();
             new Thread(()->diagnosticResult(token,"Аудиовыход Visualizer",DeviceDiagnostics.audioProbe(MainActivity.this)),"gf-diagnostics-audio").start();
+        }
+        @JavascriptInterface public String getPermissionState(){
+            return DeviceDiagnostics.permissions(MainActivity.this).toString();
         }
         @JavascriptInterface public String getDiagnostics(){return DeviceDiagnostics.collect(MainActivity.this).toString();}
         @JavascriptInterface public void shareReport(String json){
