@@ -83,7 +83,7 @@ public final class CommunityActivity extends Activity {
         browser.setDownloadListener((url,userAgent,contentDisposition,mimeType,length)->{
             try{
                 String safe=filename(URLUtil.guessFileName(url,contentDisposition,mimeType));
-                if(url.startsWith("blob:")){downloadBlob(url,safe,mimeType);return;}
+                if(url.startsWith("blob:")){if(safe.endsWith(".bin")||safe.endsWith(".dat"))safe="community-glyph-"+System.currentTimeMillis()+".gforge";downloadBlob(url,safe,mimeType);return;}
                 if(!url.startsWith("https://"))throw new Exception("Ссылка не HTTPS");
                 DownloadManager.Request request=new DownloadManager.Request(Uri.parse(url));
                 request.setTitle(safe);request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

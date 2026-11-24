@@ -122,8 +122,10 @@ public class MainActivity extends Activity {
         }catch(Exception e){status("Невозможно запустить Music: "+e.getMessage());}
     }
     @Override public void onBackPressed(){
-        if(web!=null){web.evaluateJavascript("window.GlyphForgeNavigateBack?.()",null);return;}
-        super.onBackPressed();
+        if(web==null){super.onBackPressed();return;}
+        web.evaluateJavascript("window.GlyphForgeNavigateBack?.()",value->{
+            if(!"true".equals(value))MainActivity.super.onBackPressed();
+        });
     }
     @Override protected void onDestroy(){
         if(!MusicVisualizerService.isRunning())GlyphPlayer.get(this).stop();
@@ -140,7 +142,7 @@ public class MainActivity extends Activity {
             if(json==null||json.length()>200_000)return;
             runOnUiThread(()->{
                 Intent send=new Intent(Intent.ACTION_SEND);
-                send.setType("application/json");send.putExtra(Intent.EXTRA_TEXT,json);
+                send.setType("text/plain");send.putExtra(Intent.EXTRA_TEXT,json);
                 try{startActivity(Intent.createChooser(send,"Отправить отчёт GlyphForge"));}
                 catch(Exception e){status("Не удалось открыть меню отправки");}
             });

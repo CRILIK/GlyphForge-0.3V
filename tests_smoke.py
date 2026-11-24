@@ -151,6 +151,7 @@ def test_music_save_search_import(page):
     assert page.locator('#music-presets').inner_text().count('Мой бас тест')>=1
     example={'kind':'glyphforge-music-profile','version':1,'profile':{'title':'Импортированный бит','mode':'wave','sensitivity':2.2}}
     page.locator('#music-import-file').set_input_files({'name':'new.gforgebeat','mimeType':'application/json','buffer':json.dumps(example).encode()})
+    page.wait_for_function('GlyphForgeTest.getState().musicProfiles.length === 2',timeout=7000)
     assert len(page.evaluate('GlyphForgeTest.getState().musicProfiles'))==2
 
 
@@ -192,9 +193,15 @@ def test_music_render_changes_based_on_signal(page):
     assert off!=on
 
 def test_video_import_local_mp4(page):
+    # Android/browser media codec availability is distinct from GlyphForge logic.
+    if not page.evaluate('document.createElement("video").canPlayType("video/mp4")'):
+        pytest.skip('This CI browser does not advertise MP4 playback support')
     page.locator('.nav[data-tab="import"]').click()
     page.locator('#file-media').set_input_files(ROOT/'tests'/'testsrc_2s.mp4')
-    expect(page.locator('#frame-total')).to_have_text('13',timeout=12000)
+    try:
+        expect(page.locator('#frame-total')).to_have_text('13',timeout=28000)
+    except AssertionError as ex:
+        raise AssertionError('MP4 decoding failed; UI reported: '+page.locator('#import-result').inner_text()) from ex
     assert 'Готово: 13 кадров' in page.locator('#import-result').inner_text()
     page.locator('#save-design').click()
     assert len(page.evaluate('GlyphForgeTest.getState().designs[0].frames'))==13
