@@ -26,6 +26,7 @@ jobs:
           node --check app/src/main/assets/app.js
           node --check app/src/main/assets/music.js
           node --check app/src/main/assets/format.js
+          node --check app/src/main/assets/diagnostics.js
       - name: Install Android SDK platform
         shell: bash
         run: |
