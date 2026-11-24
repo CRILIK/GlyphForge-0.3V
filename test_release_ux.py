@@ -43,12 +43,23 @@ def test_android_update_banner_and_diagnostics():
 
 
 def test_release_signed_update_path():
-    source=(JAVA/'UpdateInstaller.java').read_text()
-    assert 'GET_SIGNING_CERTIFICATES' in source
-    assert 'sameSigners' in source
-    assert 'getLongVersionCode()<=installed.getLongVersionCode()' in source
-    assert 'FLAG_GRANT_READ_URI_PERMISSION' in source
-    assert 'REQUEST_INSTALL_PACKAGES' in (ROOT/'app/src/main/AndroidManifest.xml').read_text()
+    assert 'REQUEST_INSTALL_PACKAGES' not in (ROOT/'app/src/main/AndroidManifest.xml').read_text()
+    assert 'installUpdate(' not in (JAVA/'MainActivity.java').read_text()
     wf=(ROOT/'.github/workflows/release-apk.yml').read_text()
     assert 'apksigner' in wf and 'gh release create' in wf and 'workflow_dispatch:' in wf
     assert 'secrets.GF_KEYSTORE_B64' in wf
+
+def test_security_guardrails():
+    import xml.etree.ElementTree as ET
+    root=ET.parse(ROOT/'app/src/main/AndroidManifest.xml').getroot()
+    ns='{http://schemas.android.com/apk/res/android}'
+    perms={x.get(ns+'name') for x in root.findall('uses-permission')}
+    assert not perms & {'android.permission.REQUEST_INSTALL_PACKAGES','android.permission.INSTALL_PACKAGES','android.permission.READ_CONTACTS','android.permission.READ_SMS','android.permission.READ_CALL_LOG'}
+    assert root.find('application').get(ns+'usesCleartextTraffic')=='false'
+    main=(JAVA/'MainActivity.java').read_text()
+    assert 'settings.setAllowFileAccess(false)' in main and 'settings.setBlockNetworkLoads(true)' in main
+    assert 'Content-Security-Policy' in (ASSETS/'index.html').read_text()
+    assert not (JAVA/'UpdateInstaller.java').exists() and not (JAVA/'UpdateFileProvider.java').exists()
+    assert 'if(!needed||n.extras==null)' in (JAVA/'GlyphNotificationListener.java').read_text()
+    for path in ['build-apk.yml','release-apk.yml']:
+        assert 'GlyphMatrix-Developer-Kit/999b1143a6bff0dd79db11d21b92c15c56a346b1/' in (ROOT/'.github/workflows'/path).read_text()

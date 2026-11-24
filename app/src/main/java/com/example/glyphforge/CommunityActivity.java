@@ -31,7 +31,7 @@ import org.json.JSONObject;
 public final class CommunityActivity extends Activity {
     private WebView browser;
     private final SecureRandom random=new SecureRandom();
-    private String pendingToken, pendingName, pendingMime;
+    private String pendingToken, pendingName, pendingMime, pendingOrigin;
     private static final int MAX_BLOB=8_000_000;
 
     @Override public void onCreate(Bundle b){super.onCreate(b);
@@ -54,15 +54,15 @@ public final class CommunityActivity extends Activity {
         browser=new WebView(this);root.addView(browser,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
         root.requestApplyInsets();
         browser.getSettings().setJavaScriptEnabled(true);browser.getSettings().setDomStorageEnabled(true);
-        browser.getSettings().setAllowFileAccess(false);browser.getSettings().setAllowContentAccess(false);
+        browser.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);browser.getSettings().setAllowFileAccess(false);browser.getSettings().setAllowContentAccess(false);
         browser.getSettings().setAllowFileAccessFromFileURLs(false);browser.getSettings().setAllowUniversalAccessFromFileURLs(false);
         browser.setWebChromeClient(new WebChromeClient(){
             // A one-shot callback for the blob: URL explicitly downloaded by the user.
             // No addJavascriptInterface() is exposed to untrusted third-party pages.
             @Override public boolean onJsPrompt(WebView view,String url,String message,String value,JsPromptResult result){
-                if(pendingToken!=null&&message.equals("GF_BLOB_"+pendingToken)){
+                if(pendingToken!=null&&("GF_BLOB_"+pendingToken).equals(message)&&pendingOrigin!=null&&pendingOrigin.equals(origin(url))){
                     String name=pendingName,mime=pendingMime;
-                    pendingToken=null;pendingName=null;pendingMime=null;
+                    pendingToken=null;pendingName=null;pendingMime=null;pendingOrigin=null;
                     result.confirm("");
                     if(value!=null&&value.length()<MAX_BLOB*2){saveDataUrl(value,name,mime);}
                     else toast("Этот файл слишком большой. Открой сайт кнопкой ↗.");
@@ -87,7 +87,7 @@ public final class CommunityActivity extends Activity {
         });
         browser.setDownloadListener((url,userAgent,contentDisposition,mimeType,length)->{
             try{
-                String safe=filename(URLUtil.guessFileName(url,contentDisposition,mimeType));
+                String safe=filename(URLUtil.guessFileName(url,contentDisposition,mimeType));if(!safeMedia(safe,mimeType)){DiagnosticJournal.mark(this,"community_unsupported_file");toast("Поддерживаются только изображения, видео и JSON/GFORGE");return;}
                 if(url.startsWith("blob:")){if(safe.endsWith(".bin")||safe.endsWith(".dat"))safe="community-glyph-"+System.currentTimeMillis()+".gforge";downloadBlob(url,safe,mimeType);return;}
                 if(!url.startsWith("https://")){
                     DiagnosticJournal.mark(this,"community_non_https_blocked");toast("Ссылка не HTTPS. Открой страницу кнопкой ↗ и скачай во внешнем браузере.");
@@ -96,7 +96,7 @@ public final class CommunityActivity extends Activity {
                 DownloadManager.Request request=new DownloadManager.Request(Uri.parse(url));
                 request.setTitle(safe);request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                 if(userAgent!=null)request.addRequestHeader("User-Agent",userAgent);
-                String cookie=CookieManager.getInstance().getCookie(url);if(cookie!=null)request.addRequestHeader("Cookie",cookie);
+                // Authentication cookies are not copied to DownloadManager. For authenticated direct downloads use the site in the external browser.
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"GlyphForge/"+safe);
                 ((DownloadManager)getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);
                 DiagnosticJournal.mark(this,"community_https_enqueued");toast("Загрузка в Загрузки/GlyphForge…");
@@ -106,6 +106,8 @@ public final class CommunityActivity extends Activity {
         if(requested==null||(!requested.startsWith("https://app.glyphmuseum.com/")&&!requested.startsWith("https://playground.nothing.tech/")))requested="https://app.glyphmuseum.com/";
         browser.loadUrl(requested);
     }
+    private static String origin(String url){try{Uri u=Uri.parse(url);return "https".equals(u.getScheme())&&u.getHost()!=null?"https://"+u.getHost()+":"+u.getPort():null;}catch(Exception e){return null;}}
+    private static boolean safeMedia(String name,String mime){String n=name.toLowerCase(java.util.Locale.ROOT);String m=mime==null?"":mime.toLowerCase(java.util.Locale.ROOT);if(n.endsWith(".apk")||m.contains("package-archive"))return false;return n.matches(".*\\.(gif|png|jpg|jpeg|webp|mp4|webm|json|gforge)$")||m.startsWith("image/")||m.startsWith("video/")||m.equals("application/json")||m.equals("application/octet-stream");}
     private int dp(int d){return (int)(d*getResources().getDisplayMetrics().density+.5f);}
     private String filename(String name){
         if(name==null||name.isBlank())name="community-glyph-"+System.currentTimeMillis()+".gif";
@@ -118,7 +120,7 @@ public final class CommunityActivity extends Activity {
         if(origin==null||!origin.startsWith("https://")){toast("Не удалось подтвердить HTTPS-страницу");return;}
         // Token is valid only for this user-requested export and consumed once.
         String token=Long.toHexString(random.nextLong())+Long.toHexString(random.nextLong());
-        pendingToken=token;pendingName=name;pendingMime=mime;
+        pendingToken=token;pendingName=name;pendingMime=mime;pendingOrigin=origin(origin);
         String javascript="(async function(){try{const r=await fetch("+JSONObject.quote(url)+");"+
           "const b=await r.blob();if(b.size>"+MAX_BLOB+"){prompt('GF_BLOB_"+token+"','too-large');return;}"+
           "const fr=new FileReader();fr.onload=()=>prompt('GF_BLOB_"+token+"',String(fr.result));"+
@@ -135,7 +137,7 @@ public final class CommunityActivity extends Activity {
             if(bytes.length>MAX_BLOB)throw new Exception("Файл слишком большой");
             ContentValues values=new ContentValues();values.put(MediaStore.Downloads.DISPLAY_NAME,name);
             values.put(MediaStore.Downloads.RELATIVE_PATH,Environment.DIRECTORY_DOWNLOADS+"/GlyphForge");
-            String actualMime=header.substring(5,header.indexOf(';'));
+            String actualMime=header.substring(5,header.indexOf(';'));if(!safeMedia(name,actualMime))throw new Exception("Неподдерживаемый тип файла");
             values.put(MediaStore.Downloads.MIME_TYPE,actualMime.isBlank()?"application/octet-stream":actualMime);
             Uri dest=getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI,values);
             if(dest==null)throw new Exception("Нет доступа к Загрузкам");

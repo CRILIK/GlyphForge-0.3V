@@ -55,8 +55,9 @@ public class MainActivity extends Activity {
         WebSettings settings = web.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
+        settings.setAllowFileAccess(false);
+        settings.setAllowContentAccess(true); // user-selected files from Android document picker only
+        settings.setBlockNetworkLoads(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setAllowFileAccessFromFileURLs(false);
         settings.setAllowUniversalAccessFromFileURLs(false);
@@ -65,8 +66,8 @@ public class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
                 Uri u=r.getUrl();
-                if ("file".equals(u.getScheme()) && "android_asset".equals(u.getHost())) return false;
-                if ("https".equals(u.getScheme())) {
+                if ("file".equals(u.getScheme()) && "/android_asset/index.html".equals(u.getPath())) return false;
+                if (r.isForMainFrame() && r.hasGesture() && "https".equals(u.getScheme())) {
                     try { startActivity(new Intent(Intent.ACTION_VIEW, u)); } catch(Exception ignored) {}
                 }
                 return true;
@@ -179,11 +180,6 @@ public class MainActivity extends Activity {
                 catch(Exception e){status("Не удалось открыть меню отправки");}
             });
         }
-        @JavascriptInterface public void installUpdate(String url){
-            runOnUiThread(()->UpdateInstaller.start(MainActivity.this,url,message->runOnUiThread(()->{
-                if(web!=null&&!isDestroyed())web.evaluateJavascript("window.GlyphInstallStatus("+org.json.JSONObject.quote(message)+")",null);
-            })));
-        }
         @JavascriptInterface public void checkForUpdates(){
             UpdateChecker.check(MainActivity.this, result -> runOnUiThread(()->{
                 if(web!=null)web.evaluateJavascript("window.GlyphUpdateResult("+org.json.JSONObject.quote(result)+")",null);
@@ -242,7 +238,7 @@ public class MainActivity extends Activity {
             runOnUiThread(()->{Intent i=new Intent(MainActivity.this,CommunityActivity.class);i.putExtra("url",url);startActivity(i);});
         }
         @JavascriptInterface public void openExternal(String url){
-            try{Uri uri=Uri.parse(url);if(!"https".equals(uri.getScheme()))return;runOnUiThread(()->startActivity(new Intent(Intent.ACTION_VIEW,uri)));}
+            try{Uri uri=Uri.parse(url);if(!"https".equals(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null)return;runOnUiThread(()->startActivity(new Intent(Intent.ACTION_VIEW,uri)));}
             catch(Exception e){status("Не удалось открыть ссылку");}
         }
         @JavascriptInterface public void saveBase64(String base64,String filename,String mime){

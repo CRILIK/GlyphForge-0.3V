@@ -1,0 +1,5 @@
+# Security review
+
+The 0.4.4 user report mentioned Play Protect; its exact classification remains unknown. Functional tests are not malware clearance. Do not bypass Play Protect. Removed the in-app APK installer and its permission; opens releases in an external browser; blocks network loads in the privileged editor WebView; adds CSP and separates community browsing. Notification text is inspected only for enabled keyword rules matching the app. Authenticated HTTP downloads now use the browser rather than copying authentication cookies. The Nothing SDK is pinned to a commit, not independently audited. Static guardrail tests run in CI. Persistent signing must be configured by the repository owner via protected Secrets, never committed.
+
+Remaining: notification access, audio and call permissions are intentional; official SDK and community sites are third-party code; the exported automation receiver is gated by a random secret; the Glyph Toy service is exported for official integration. No independent APK scan or Google verdict is available. Review the exact APK hash, certificate and merged manifest before distribution. No silent install.

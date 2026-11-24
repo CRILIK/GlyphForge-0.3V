@@ -35,15 +35,7 @@ public final class UpdateChecker {
                     String current=c.getPackageManager().getPackageInfo(c.getPackageName(),0).versionName;
                     boolean newer=compareVersions(tag,current)>0;
                     response.put("available",newer);response.put("version",tag);response.put("url",html);
-                    org.json.JSONArray assets=release.optJSONArray("assets");
-                    if(newer&&assets!=null&&tag.matches("v[0-9]+\\.[0-9]+\\.[0-9]+")){
-                        for(int i=0;i<assets.length();i++){
-                            JSONObject asset=assets.optJSONObject(i);if(asset==null)continue;
-                            String apk=asset.optString("browser_download_url");
-                            if(UpdateInstaller.allowedAsset(apk)&&apk.endsWith("/"+tag+"/GlyphForge-"+tag+".apk"))response.put("apkUrl",apk);
-                        }
-                    }
-                    response.put("message",newer?"Новая версия опубликована. Установку Android запросит отдельно.":"Установлена последняя опубликованная версия ("+current+")");
+                    response.put("message",newer?"Новая версия опубликована. Открой официальный релиз и подтверди обновление в Android.":"Установлена последняя опубликованная версия ("+current+")");
                 }
             }catch(Exception e){try{response.put("available",false);response.put("message","Не удалось проверить обновления: "+e.getClass().getSimpleName());}catch(Exception ignored){}}
             finally{if(conn!=null)conn.disconnect();callback.accept(response.toString());}

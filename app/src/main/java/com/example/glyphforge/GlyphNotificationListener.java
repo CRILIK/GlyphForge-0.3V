@@ -66,6 +66,12 @@ public final class GlyphNotificationListener extends NotificationListenerService
         if(sbn==null)return;
         if(sbn.getPackageName().equals(getPackageName())){if("gf_diagnostic".equals(sbn.getTag()))diagnosticSeen=android.os.SystemClock.elapsedRealtime();return;}
         Notification n=sbn.getNotification();if(n==null||(n.flags & Notification.FLAG_GROUP_SUMMARY)!=0)return;
+        // Only inspect text for an enabled matching keyword rule.
+        boolean needed=false;
+        try{JSONArray rules=new JSONObject(Store.read(this)).optJSONArray("rules");
+            if(rules!=null)for(int i=0;i<rules.length();i++){JSONObject r=rules.optJSONObject(i);if(r==null||!r.optBoolean("enabled",true)||!"notification".equals(r.optString("event")))continue;String pkg=r.optString("app","*").trim();if(("*".equals(pkg)||pkg.equalsIgnoreCase(sbn.getPackageName()))&&!r.optString("keyword","").trim().isEmpty()){needed=true;break;}}
+        }catch(Exception ignored){}
+        if(!needed||n.extras==null){RuleDispatcher.fire(this,"notification",sbn.getPackageName(),"");return;}
         CharSequence title=n.extras.getCharSequence(Notification.EXTRA_TITLE,"");
         CharSequence body=n.extras.getCharSequence(Notification.EXTRA_TEXT,"");
         RuleDispatcher.fire(this,"notification",sbn.getPackageName(),title+" "+body);
