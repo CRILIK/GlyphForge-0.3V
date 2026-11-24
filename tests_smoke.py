@@ -388,3 +388,15 @@ def test_backup_export_contains_all_categories(page):
     backup=json.loads(Path(item.path()).read_text(encoding='utf-8'))
     assert backup['kind']=='glyphforge-backup'
     assert all(k in backup['state'] for k in ('designs','rules','scenes','musicProfiles'))
+
+
+def test_legacy_library_restore_preserves_disabled_rules(page):
+    page.locator('.nav[data-tab="library"]').click()
+    design=page.evaluate('GlyphForgeTest.getState().designs[0]')
+    payload={'kind':'glyphforge-library','version':1,'designs':[design],'scenes':[{'id':'old-scene','name':'Recovered','steps':[{'assetId':design['id'],'repeat':1,'pause':0}]}],'rules':[{'id':'old-rule','name':'Recovered','event':'notification','target':'s:old-scene','enabled':True}]}
+    page.locator('#file-json').set_input_files({'name':'old.gforge','mimeType':'application/json','buffer':json.dumps(payload).encode()})
+    page.wait_for_function('GlyphForgeTest.getState().rules.length===1')
+    state=page.evaluate('GlyphForgeTest.getState()')
+    assert state['rules'][0]['enabled'] is False
+    assert state['rules'][0]['target']=='s:'+state['scenes'][0]['id']
+    assert state['scenes'][0]['steps'][0]['assetId'] != design['id']

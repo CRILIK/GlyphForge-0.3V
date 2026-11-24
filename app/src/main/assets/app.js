@@ -102,14 +102,15 @@ async function importLibraryFile(f){if(!f)return;try{
  if(!/\.(json|gforge)$/i.test(f.name)){await importMedia(f,true);return}
  if(f.size>25e6)throw Error('JSON больше 25 МБ');const o=JSON.parse(await f.text());let count=0;
  if(o.kind==='glyphforge-library'){
-   const remap={};for(const d of (o.designs||[])){const n=normalizeDesign(d);if(n){const old=n.id;n.id=id();remap[old]=n.id;state.designs.unshift(n);count++}}
-   for(const sc of (o.scenes||[]).filter(x=>Array.isArray(x.steps)).slice(0,500)){
-      state.scenes.push({...sc,id:id(),steps:sc.steps.map(st=>({...st,assetId:remap[st.assetId]||st.assetId}))});}
+   const remap=Object.create(null),sceneRemap=Object.create(null);for(const d of (o.designs||[])){const n=normalizeDesign(d);if(n){const old=n.id;n.id=id();remap[old]=n.id;state.designs.unshift(n);count++}}
+   for(const sc of (o.scenes||[]).filter(x=>x&&Array.isArray(x.steps)).slice(0,500)){
+      const steps=sc.steps.filter(st=>st&&remap[st.assetId]).map(st=>({...st,assetId:remap[st.assetId]}));if(!steps.length)continue;const newId=id();sceneRemap[sc.id]=newId;state.scenes.push({...sc,id:newId,steps});}
    for(const profile of (o.musicProfiles||[]).filter(x=>x&&typeof x==='object').slice(0,500)){
       if(!Array.isArray(state.musicProfiles))state.musicProfiles=[];
       state.musicProfiles.push({...profile,id:id(),designId:remap[profile.designId]||profile.designId});
    }
-   // Rules are not automatically activated on import: they may monitor sensitive notifications.
+   // Restore legacy exported rules with remapped targets, but never activate them automatically.
+   for(const r of (Array.isArray(o.rules)?o.rules:[]).slice(0,1000)){if(!r||typeof r.target!=='string')continue;const d=r.target.startsWith('d:')?remap[r.target.slice(2)]:null,s=r.target.startsWith('s:')?sceneRemap[r.target.slice(2)]:null;const target=d?'d:'+d:s?'s:'+s:null;if(target)state.rules.push({...clone(r),id:id(),target,enabled:false});}
  }else{
    const n=normalizeDesign(o);if(!n)throw Error('Неизвестный формат JSON. Поддерживается Glyph Museum v4/v1 и .gforge');n.id=id();state.designs.unshift(n);count=1;
  }

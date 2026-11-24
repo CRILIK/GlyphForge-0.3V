@@ -7,12 +7,14 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  actions: read
 concurrency:
   group: glyphforge-signed-release
   cancel-in-progress: false
 jobs:
   release:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -46,6 +48,24 @@ jobs:
             exit 0
           fi
           echo "publish=true" >> "$GITHUB_OUTPUT"
+      - name: Require successful QA and emulator run for this commit
+        if: steps.plan.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 60); do
+            QA=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/qa.yml/runs?head_sha=$GITHUB_SHA&per_page=5" --jq '.workflow_runs[0].conclusion // ""')
+            BUILD=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/build-apk.yml/runs?head_sha=$GITHUB_SHA&per_page=5" --jq '.workflow_runs[0].conclusion // ""')
+            if [[ "$QA" == "success" && "$BUILD" == "success" ]]; then exit 0; fi
+            if [[ "$QA" =~ ^(failure|cancelled|timed_out)$ || "$BUILD" =~ ^(failure|cancelled|timed_out)$ ]]; then
+              echo "::error::QA or emulator failed on this commit"; exit 1
+            fi
+            echo "QA=$QA; build=$BUILD; checks not yet complete"
+            sleep 15
+          done
+          echo "::error::No successful QA and emulator run for this commit. Run both workflows before releasing."
+          exit 1
       - name: Require stable release signing secrets
         if: steps.plan.outputs.publish == 'true'
         env:
@@ -96,6 +116,27 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump permissions "GlyphForge-${TAG}.apk" | tee release-permissions.txt
           if grep -E "android.permission.(REQUEST_INSTALL_PACKAGES|INSTALL_PACKAGES|READ_SMS|READ_CONTACTS|READ_CALL_LOG)" release-permissions.txt; then exit 1; fi
           rm -f "$RUNNER_TEMP/release.jks"
+      - name: Ensure previous release can be upgraded without uninstall
+        if: steps.plan.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.plan.outputs.tag }}
+        run: |
+          set -euo pipefail
+          OLD=$(gh release list --exclude-drafts --exclude-pre-releases --limit 1 --json tagName --jq '.[0].tagName // ""')
+          if [[ -z "$OLD" ]]; then echo "First signed release"; exit 0; fi
+          mkdir -p "$RUNNER_TEMP/previous"
+          gh release download "$OLD" --pattern "GlyphForge-$OLD.apk" --dir "$RUNNER_TEMP/previous"
+          OLD_APK="$RUNNER_TEMP/previous/GlyphForge-$OLD.apk"
+          NEW_APK="GlyphForge-$TAG.apk"
+          SIGNER="$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
+          OLD_CERT=$("$SIGNER" verify --print-certs "$OLD_APK" | grep 'certificate SHA-256 digest:' | sort)
+          NEW_CERT=$("$SIGNER" verify --print-certs "$NEW_APK" | grep 'certificate SHA-256 digest:' | sort)
+          [[ -n "$OLD_CERT" && "$OLD_CERT" == "$NEW_CERT" ]] || { echo "::error::Signing key changed; release blocked"; exit 1; }
+          OLD_CODE=$("$AAPT" dump badging "$OLD_APK" | sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p")
+          NEW_CODE=$("$AAPT" dump badging "$NEW_APK" | sed -n "s/.*versionCode='\([0-9]*\)'.*/\1/p")
+          [[ "$OLD_CODE" =~ ^[0-9]+$ && "$NEW_CODE" =~ ^[0-9]+$ && "$NEW_CODE" -gt "$OLD_CODE" ]] || { echo "::error::versionCode must increase"; exit 1; }
       - name: Publish release on GitHub
         if: steps.plan.outputs.publish == 'true'
         env:

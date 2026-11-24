@@ -10,3 +10,6 @@ Workflow Publish signed GlyphForge release запускается вручную
 
 
 Security update: GlyphForge opens GitHub Releases in an external browser. It does not install APKs or request installation permission. Never bypass Play Protect. The same permanent signing key remains necessary for normal updates.
+
+
+Release gate: requires successful browser and Android emulator workflows for the exact same commit; when a previous release exists the workflow downloads its APK and compares SHA-256 signing certificate fingerprints and versionCode. A mismatch blocks release. Legacy .gforge library import preserves remapped rules in a disabled state.
