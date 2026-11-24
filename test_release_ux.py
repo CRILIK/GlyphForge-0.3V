@@ -25,3 +25,18 @@ def test_update_checker_is_opt_in_for_installation():
     assert 'api.github.com/repos/CRILIK/GlyphForge-0.3V/releases/latest' in source
     assert 'ACTION_VIEW' in (JAVA/'MainActivity.java').read_text()
     assert 'INSTALL_PACKAGES' not in source
+
+
+def test_community_browser_supports_exports_and_has_visible_back_button():
+    source=(JAVA/'CommunityActivity.java').read_text()
+    assert 'header.setMinimumHeight(dp(64))' in source
+    assert 'root.requestApplyInsets()' in source
+    assert 'blob".equals(scheme)' in source
+    assert 'startActivity(new Intent(Intent.ACTION_VIEW,u))' in source
+
+def test_android_update_banner_and_diagnostics():
+    diag=(ASSETS/'diagnostics.js').read_text()
+    assert 'update-banner' in diag
+    assert 'GlyphForge_Diagnostics.json' in diag
+    assert 'Nothing SDK загружен' in diag
+    assert "versionName '0.4.1'" in (ROOT/'app/build.gradle').read_text()
