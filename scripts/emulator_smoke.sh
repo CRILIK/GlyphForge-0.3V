@@ -26,21 +26,42 @@ fi
 # the real app UI instead of trying to start it from adb shell.
 tap_ui_label() {
   local snapshot="$1" needle="$2"
-  adb shell uiautomator dump /sdcard/window.xml >/dev/null
-  adb shell cat /sdcard/window.xml > "emulator-artifacts/$snapshot.xml"
-  python3 - "emulator-artifacts/$snapshot.xml" "$needle" <<'PY'
+  local attempt=0
+  while (( attempt < 10 )); do
+    adb shell uiautomator dump /sdcard/window.xml >/dev/null
+    adb shell cat /sdcard/window.xml > "emulator-artifacts/$snapshot.xml"
+    if python3 - "emulator-artifacts/$snapshot.xml" "$needle" <<'PY'
 import re, sys, xml.etree.ElementTree as ET, subprocess
-root=ET.parse(sys.argv[1]).getroot(); needle=sys.argv[2]
-items=[n for n in root.iter('node') if needle in n.attrib.get('text','') and n.attrib.get('clickable')=='true']
-assert items, f'Clickable {needle!r} not present in UI'
-coords=[int(x) for x in re.findall(r'\d+',items[0].attrib.get('bounds',''))]
-assert len(coords)==4, f'Bad bounds: {coords}'
-if needle=='Назад':
-    assert coords[1]>25 and coords[3]-coords[1]>40, f'Back button covered by status bar: {coords}'
-subprocess.run(['adb','shell','input','tap',str((coords[0]+coords[2])//2),str((coords[1]+coords[3])//2)],check=True)
-print(f'PASS: tapped {needle!r} at {coords}')
+root=ET.parse(sys.argv[1]).getroot()
+needle=sys.argv[2]
+for n in root.iter('node'):
+    if needle not in n.attrib.get('text','') or n.attrib.get('clickable')!='true':
+        continue
+    coords=[int(x) for x in re.findall(r'\d+',n.attrib.get('bounds',''))]
+    if len(coords)!=4 or coords[2]-coords[0]<32 or coords[3]-coords[1]<32:
+        continue  # Hidden WebView nodes can report [0,0][0,0].
+    if needle=='Назад' and coords[1]<=25:
+        raise AssertionError(f'Back button under status bar: {coords}')
+    x=(coords[0]+coords[2])//2; y=(coords[1]+coords[3])//2
+    subprocess.run(['adb','shell','input','tap',str(x),str(y)],check=True)
+    print(f'PASS: tapped visible {needle!r} at {coords}')
+    sys.exit(0)
+print(f'NOT VISIBLE: {needle!r}',file=sys.stderr)
+sys.exit(3)
 PY
+    then
+      return 0
+    fi
+    if [[ "$needle" == "Назад" ]]; then
+      echo "Back button is not visible"; return 1
+    fi
+    adb shell input swipe 510 1650 510 610 400
+    sleep 1
+    (( attempt += 1 ))
+  done
+  echo "Failed to locate visible button: $needle"; return 1
 }
+
 tap_ui_label library-tab 'Библиотека'
 sleep 2
 tap_ui_label library-community 'Glyph Museum'
