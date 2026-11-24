@@ -41,18 +41,13 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         web = new WebView(this);
-        // Android 15 (target SDK 35) enforces edge-to-edge. Keep the WebView
-        // below the status bar and above the gesture/navigation bar.
+        // Keep all controls outside status and gesture areas on Android 15+.
         android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
         safeArea.setBackgroundColor(android.graphics.Color.BLACK);
-        safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT));
-        safeArea.setOnApplyWindowInsetsListener((view, insets) -> {
-            android.graphics.Insets bars = insets.getInsets(
-                    android.view.WindowInsets.Type.systemBars()
-                    | android.view.WindowInsets.Type.displayCutout());
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+        safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(-1,-1));
+        safeArea.setOnApplyWindowInsetsListener((view,insets)->{
+            android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars()|android.view.WindowInsets.Type.displayCutout());
+            view.setPadding(bars.left,bars.top,bars.right,bars.bottom);
             return insets;
         });
         setContentView(safeArea);
@@ -127,7 +122,7 @@ public class MainActivity extends Activity {
         }catch(Exception e){status("Невозможно запустить Music: "+e.getMessage());}
     }
     @Override public void onBackPressed(){
-        // Browser's history belongs to the single page; back exits normally.
+        if(web!=null){web.evaluateJavascript("window.GlyphForgeNavigateBack?.()",null);return;}
         super.onBackPressed();
     }
     @Override protected void onDestroy(){
@@ -140,6 +135,21 @@ public class MainActivity extends Activity {
         runOnUiThread(()->{if(web!=null)web.evaluateJavascript("window.onNativeStatus("+json+")",null);});
     }
     public final class NativeApi {
+        @JavascriptInterface public String getDiagnostics(){return DeviceDiagnostics.collect(MainActivity.this).toString();}
+        @JavascriptInterface public void shareReport(String json){
+            if(json==null||json.length()>200_000)return;
+            runOnUiThread(()->{
+                Intent send=new Intent(Intent.ACTION_SEND);
+                send.setType("application/json");send.putExtra(Intent.EXTRA_TEXT,json);
+                try{startActivity(Intent.createChooser(send,"Отправить отчёт GlyphForge"));}
+                catch(Exception e){status("Не удалось открыть меню отправки");}
+            });
+        }
+        @JavascriptInterface public void checkForUpdates(){
+            UpdateChecker.check(MainActivity.this, result -> runOnUiThread(()->{
+                if(web!=null)web.evaluateJavascript("window.GlyphUpdateResult("+org.json.JSONObject.quote(result)+")",null);
+            }));
+        }
         @JavascriptInterface public boolean sdkAvailable(){
             try{Class.forName("com.nothing.ketchum.GlyphMatrixManager");return true;}
             catch(Throwable ignored){return false;}

@@ -18,7 +18,7 @@ const notify=s=>{const n=$('toast');n.textContent=s;clearTimeout(notify.timer);n
 const hardware=!!window.GlyphNative; const sdkReady=hardware&&!!window.GlyphNative.sdkAvailable?.(); $('device-status').textContent=hardware?(sdkReady?'Android · SDK установлен':'Android · SDK отсутствует'):'Браузер · предпросмотр';if(sdkReady)$('device-light').classList.add('connected');
 window.onNativeStatus=(status)=>{$('device-status').textContent=status;lastNativeStatus=status;notify(status)};
 function persist(){const serialized=JSON.stringify(state);try{localStorage.setItem('glyphforge-state-v1',serialized)}catch(e){console.warn('localStorage full: android backup used',e)}try{window.GlyphNative?.saveState?.(serialized)}catch(e){console.warn(e)}}
-function goto(tab){$$('.page').forEach(p=>p.classList.toggle('current',p.id==='tab-'+tab));$$('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='library')renderLibrary();if(tab==='rules')renderRules();if(tab==='scenes')renderScenes();if(tab==='ringtone')fillSelects();if(tab==='music')window.GlyphMusicRefresh?.();window.scrollTo({top:0,behavior:'instant'})}
+function goto(tab){$$('.page').forEach(p=>p.classList.toggle('current',p.id==='tab-'+tab));$$('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));if(tab==='library')renderLibrary();if(tab==='rules')renderRules();if(tab==='scenes')renderScenes();if(tab==='ringtone')fillSelects();if(tab==='music')window.GlyphMusicRefresh?.();const active=document.querySelector('.nav.active');active?.scrollIntoView?.({block:'nearest',inline:'nearest'});window.scrollTo({top:0,behavior:'instant'})}
 $$('.nav').forEach(b=>b.onclick=()=>goto(b.dataset.tab));
 function frame(){return project.frames[selected]}
 function normalizeFrame(p){return Array.from({length:169},(_,i)=>MASK[i]?clamp(Math.round(Number(p?.[i])||0),0,255):0)}
@@ -131,5 +131,7 @@ fillSelects();renderSteps();refreshEditor();renderLibrary();renderRules();render
 window.addEventListener('beforeunload',()=>{stopPreview(false);if(ringUrl)URL.revokeObjectURL(ringUrl)});
 // Minimal test hooks in browser console. No network calls, no telemetry.
 window.GlyphForgeTest={importLibraryFile,format:window.GlyphFormat,maskCount:()=>MASK.filter(Boolean).length,normalizeFrame,normalizeDesign,buildSceneFrames,getState:()=>clone(state),demo:()=>{setProject(state.designs[0])}};
+window.GlyphForgeNavigateBack=()=>{const current=document.querySelector('.page.current')?.id||'';if(current==='tab-studio')return;goto(current==='tab-diagnostics'?'library':'studio');};
+window.GlyphDiagnosticsReadState=()=>clone(state);
 window.GlyphMusicAdapter={getState:()=>state,persist,notify,goto,draw:(canvas,pixels)=>paintMatrix(canvas,pixels,canvas.width),saveJson:downloadJSON,openCommunity:external};
 })();

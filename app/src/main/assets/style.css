@@ -13,3 +13,7 @@
 .music-tile .hint{display:block;min-height:35px;padding-top:5px}
 @media(max-width:900px){.music-editor{grid-template-columns:1fr}}
 @media(max-width:720px){.sidebar{grid-template-columns:repeat(7,1fr)}.nav{font-size:8px}.nav span{font-size:17px}.music-filters{flex-direction:column}.music-filters input,.music-filters select{width:100%;flex:auto}}
+
+/* v0.4: single-row, scrollable navigation; never hide last tabs below touch area */
+.diagnostics-output{white-space:pre-wrap;word-break:break-word;background:#0e0e0e;border:1px solid #333;border-radius:9px;padding:15px;max-height:52vh;overflow:auto;font:12px/1.65 ui-monospace,monospace;color:#ddd}
+@media(max-width:720px){.sidebar{display:flex;flex-direction:row;grid-template-columns:none;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin;align-items:stretch;min-height:63px;height:auto;padding:4px 4px max(6px,env(safe-area-inset-bottom));gap:2px;white-space:nowrap}.nav{flex:0 0 76px;min-width:76px;min-height:51px;white-space:normal;justify-content:center}.main{padding-bottom:calc(105px + env(safe-area-inset-bottom))}.page-actions>button{min-height:42px}.card-actions button{min-height:38px}}

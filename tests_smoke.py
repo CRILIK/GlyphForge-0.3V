@@ -8,12 +8,12 @@ from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT / 'app/src/main/assets'
-SCRIPTS = ('format.js','kitten-sample.js','gif.js','gifexport.js','app.js','music.js')
+SCRIPTS = ('format.js','kitten-sample.js','gif.js','gifexport.js','app.js','music.js','diagnostics.js')
 
 @pytest.fixture(scope='session')
 def browser():
     with sync_playwright() as p:
-        b = p.chromium.launch(headless=True, channel='chrome' if (shutil.which('google-chrome') or shutil.which('google-chrome-stable')) else None, executable_path=None if (shutil.which('google-chrome') or shutil.which('google-chrome-stable')) else shutil.which('chromium'), args=['--no-sandbox'])
+        b = p.chromium.launch(headless=True, executable_path=shutil.which('chromium'), args=['--no-sandbox'])
         yield b
         b.close()
 
@@ -35,7 +35,7 @@ def page(browser):
 
 
 def test_loaded_and_matrix(page):
-    assert page.title().startswith('GlyphForge 0.3')
+    assert page.title().startswith('GlyphForge 0.4')
     assert page.evaluate('GlyphForgeTest.maskCount()')==137
     assert len(page.evaluate('GlyphForgeTest.getState().designs'))>=3
     assert page.locator('#device-status').inner_text().startswith('Браузер')
@@ -229,3 +229,23 @@ def test_json_format_roundtrip(page):
       return JSON.stringify(decoded.frames.map(x=>x.pixels)) === JSON.stringify(original.frames.map(x=>x.pixels));
     }''')
     assert good
+
+def test_diagnostics_available_to_phone_user(page):
+    page.locator('.nav[data-tab="diagnostics"]').click()
+    assert page.locator('#tab-diagnostics.current').count()==1
+    page.locator('#run-diagnostics').click()
+    assert 'Матрица' in page.locator('#diagnostics-output').inner_text()
+    assert '137' in page.locator('#diagnostics-output').inner_text()
+
+
+def test_phone_navigation_all_tabs_touch_accessible(page):
+    page.set_viewport_size({'width':360,'height':740})
+    tabs=page.locator('.nav')
+    assert tabs.count()==8
+    for name in ['studio','import','library','rules','scenes','music','ringtone','diagnostics']:
+        el=page.locator(f'.nav[data-tab="{name}"]')
+        el.scroll_into_view_if_needed()
+        el.click()
+        assert page.locator(f'#tab-{name}.current').count()==1
+
+
