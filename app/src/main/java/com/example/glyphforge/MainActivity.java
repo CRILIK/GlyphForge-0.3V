@@ -41,7 +41,21 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         web = new WebView(this);
-        setContentView(web);
+        // Android 15 (target SDK 35) enforces edge-to-edge. Keep the WebView
+        // below the status bar and above the gesture/navigation bar.
+        android.widget.FrameLayout safeArea = new android.widget.FrameLayout(this);
+        safeArea.setBackgroundColor(android.graphics.Color.BLACK);
+        safeArea.addView(web, new android.widget.FrameLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        safeArea.setOnApplyWindowInsetsListener((view, insets) -> {
+            android.graphics.Insets bars = insets.getInsets(
+                    android.view.WindowInsets.Type.systemBars()
+                    | android.view.WindowInsets.Type.displayCutout());
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+        setContentView(safeArea);
         WebSettings settings = web.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
