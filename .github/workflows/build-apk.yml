@@ -68,24 +68,7 @@ jobs:
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: |
-            set -euxo pipefail
-            mkdir -p emulator-artifacts
-            APK="$(find apk -name '*.apk' | head -n 1)"
-            test -n "$APK"
-            adb install -r "$APK"
-            adb logcat -c
-            adb shell am start -W -n com.example.glyphforge/.MainActivity
-            sleep 8
-            test -n "$(adb shell pidof com.example.glyphforge | tr -d '\r')"
-            adb shell uiautomator dump /sdcard/window.xml || true
-            adb shell cat /sdcard/window.xml > emulator-artifacts/window.xml || true
-            adb exec-out screencap -p > emulator-artifacts/launch.png
-            adb logcat -d -b crash > emulator-artifacts/crash.log
-            if grep -q 'FATAL EXCEPTION' emulator-artifacts/crash.log; then
-              cat emulator-artifacts/crash.log
-              exit 1
-            fi
+          script: bash scripts/emulator_smoke.sh
       - name: Upload emulator screenshot and crash log
         if: always()
         uses: actions/upload-artifact@v4
