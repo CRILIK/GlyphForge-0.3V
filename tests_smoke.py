@@ -192,16 +192,45 @@ def test_music_render_changes_based_on_signal(page):
     }''')
     assert off!=on
 
+def browser_decodes_video(page, file, mime):
+    """Test real metadata decoding, not canPlayType(), which is unreliable on CI."""
+    import base64
+    encoded=base64.b64encode(file.read_bytes()).decode('ascii')
+    return page.evaluate('''async ({encoded,mime}) => {
+      const bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));
+      const uri=URL.createObjectURL(new Blob([bytes],{type:mime}));
+      const video=document.createElement('video'); video.preload='metadata'; video.muted=true;
+      video.src=uri;
+      const result=await new Promise(resolve=>{
+        const done=ok=>{clearTimeout(timer);resolve(ok)};
+        video.onloadedmetadata=()=>done(video.videoWidth>0&&video.duration>0);
+        video.onerror=()=>done(false);
+        const timer=setTimeout(()=>done(false),4000);
+        video.load();
+      });
+      video.removeAttribute('src');video.load();URL.revokeObjectURL(uri);
+      return result;
+    }''', {'encoded':encoded,'mime':mime})
+
+
 def test_video_import_local_mp4(page):
-    # Android/browser media codec availability is distinct from GlyphForge logic.
-    if not page.evaluate('document.createElement("video").canPlayType("video/mp4")'):
-        pytest.skip('This CI browser does not advertise MP4 playback support')
+    movie=ROOT/'tests'/'testsrc_2s.mp4'
+    if not browser_decodes_video(page,movie,'video/mp4'):
+        pytest.skip('CI Chromium lacks a working H.264 MP4 decoder; Android/WebView tested separately')
     page.locator('.nav[data-tab="import"]').click()
-    page.locator('#file-media').set_input_files(ROOT/'tests'/'testsrc_2s.mp4')
-    try:
-        expect(page.locator('#frame-total')).to_have_text('13',timeout=28000)
-    except AssertionError as ex:
-        raise AssertionError('MP4 decoding failed; UI reported: '+page.locator('#import-result').inner_text()) from ex
+    page.locator('#file-media').set_input_files(movie)
+    expect(page.locator('#frame-total')).to_have_text('13',timeout=16000)
+    assert 'Готово: 13 кадров' in page.locator('#import-result').inner_text()
+    page.locator('#save-design').click()
+    assert len(page.evaluate('GlyphForgeTest.getState().designs[0].frames'))==13
+
+
+def test_video_import_local_webm(page):
+    movie=ROOT/'tests'/'testsrc_2s.webm'
+    assert browser_decodes_video(page,movie,'video/webm'), 'Chromium should support VP8 WebM in CI'
+    page.locator('.nav[data-tab="import"]').click()
+    page.locator('#file-media').set_input_files(movie)
+    expect(page.locator('#frame-total')).to_have_text('13',timeout=16000)
     assert 'Готово: 13 кадров' in page.locator('#import-result').inner_text()
     page.locator('#save-design').click()
     assert len(page.evaluate('GlyphForgeTest.getState().designs[0].frames'))==13
